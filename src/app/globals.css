@@ -1,0 +1,470 @@
+@import "tailwindcss";
+
+/* ============================================================
+   LinguaFlow Design Tokens — v2 "Hanami" palette
+   ------------------------------------------------------------
+   GANTI DARI: Indigo (Ai-iro) tua + Vermillion (merah torii),
+   dengan nuansa cream-navy yang berat/formal.
+
+   JADI: palet "hanami" (piknik lihat bunga sakura) — putih bersih,
+   pink sakura, dan biru langit (sora-iro). Tetap berakar dari budaya
+   Jepang, cuma momennya beda: bukan "kuil & tinta" tapi "musim semi,
+   langit cerah, kelopak sakura berguguran".
+
+   - Siang (app & sebagian landing): Putih · Sakura (pink) · Sora (biru langit)
+   - Malam (adegan sinematik landing): Yozora (langit malam ungu-tua) ·
+     Sakura — mengambil konsep asli "yozakura" (夜桜), tradisi melihat
+     sakura di malam hari yang diterangi lampu, supaya adegan gelap di
+     landing page tetap terasa "sakura", bukan cuma diganti jadi biru.
+
+   Nama token lama -> baru (dipakai juga utk sed rename di semua file):
+     indigo, indigo-tint, indigo-tint-2, indigo-tint-soft  -> sora, sora-tint, sora-tint-2, sora-tint-soft
+     vermillion, vermillion-soft                            -> sakura, sakura-soft
+     jp-red                                                  -> sakura  (dulu jp-red & vermillion sama
+                                                                          persis nilainya, #c8373a — jadi
+                                                                          sekarang digabung jadi satu token)
+     navy, navy-soft                                         -> yozora, yozora-soft
+   ============================================================ */
+@theme {
+  /* Landing palette (siang) */
+  --color-cream: #fdf9fa;
+  --color-cream-deep: #f6ecf1;
+  --color-yozora: #241f42;
+  --color-yozora-soft: #362b5c;
+  --color-gold: #dca23e;
+  --color-ink: #262230;
+  --color-ink-soft: #756f7d;
+  --color-line: #ece3e8;
+
+  /* App palette */
+  --color-sora: #3d7dae;
+  --color-sora-tint: #5b94be;
+  --color-sora-tint-2: #7fadd1;
+  --color-sora-tint-soft: #e7f1f8;
+  --color-sakura: #c24d77;
+  --color-sakura-soft: #e8799e;
+  --color-sakura-tint: #f6dce6;
+  --color-sakura-tint-soft: #fcf0f5;
+  --color-warm-white: #fcf9fa;
+  --color-paper: #ffffff;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-gold-app: #e3ac4c;
+
+  /* Radius */
+  --radius-card: 1.25rem;
+  --radius-btn: 0.75rem;
+
+  /* Shadow halus — sekarang di-tint biru sora, dulu di-tint indigo lama */
+  --shadow-soft: 0 4px 20px rgba(61, 125, 174, 0.1);
+  --shadow-soft-lg: 0 8px 30px rgba(61, 125, 174, 0.14);
+
+  /* Fonts */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-jp: var(--font-noto-jp), "Noto Sans JP", sans-serif;
+}
+
+:root {
+  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-noto-jp: "Noto Sans JP", sans-serif;
+}
+
+* {
+  /* Remove default tap highlight but we replace with custom focus-visible styles below */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom focus ring for interactive elements — replaces removed tap highlight.
+   Dulu warnanya var(--color-jp-red); sekarang var(--color-sakura), token yang sama
+   yang menggantikan jp-red di seluruh app. */
+:focus-visible {
+  outline: 2px solid var(--color-sakura);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+body {
+  background-color: var(--color-warm-white);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+/* Japanese text rendering */
+.jp {
+  font-family: var(--font-jp);
+  font-weight: 500;
+}
+.jp-bold {
+  font-family: var(--font-jp);
+  font-weight: 700;
+}
+
+/* Kanji decorative background — very low opacity (landers).
+   Warnanya sekarang yozora (dulu navy) supaya tetap gelap & elegan
+   walau huenya bergeser dari biru-tua netral ke ungu-tua senja. */
+.kanji-bg {
+  font-family: var(--font-jp);
+  font-weight: 700;
+  color: var(--color-yozora);
+  opacity: 0.04;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Seigaiha wave motif — subtle.
+   Dulu stroke-nya #12203a (navy). Sekarang default .seigaiha (dipakai di
+   atas background TERANG) pakai biru sora — ombak/langit biru terasa
+   lebih pas daripada navy tua yang berat. Untuk dipakai di atas
+   background GELAP (adegan yozakura di landing), pakai .seigaiha-yozora
+   yang stroke-nya krem terang (dulu nama classnya "seigaiha-navy",
+   sekarang diganti "seigaiha-yozora" biar konsisten dgn nama token baru). */
+.seigaiha {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Cpath d='M0 20c5-8 15-8 20 0M20 20c5-8 15-8 20 0M-10 10c5-8 15-8 20 0M10 10c5-8 15-8 20 0M30 10c5-8 15-8 20 0' fill='none' stroke='%233D7DAE' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 40px 20px;
+  opacity: 0.08;
+}
+.seigaiha-yozora {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Cpath d='M0 20c5-8 15-8 20 0M20 20c5-8 15-8 20 0M-10 10c5-8 15-8 20 0M10 10c5-8 15-8 20 0M30 10c5-8 15-8 20 0' fill='none' stroke='%23FDF9FA' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 40px 20px;
+  opacity: 0.08;
+}
+
+/* Paper texture — subtle noise grain for cream backgrounds */
+.bg-cream-paper {
+  background-color: var(--color-cream);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.035'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+/* Asanoha-ish faint grid for empty states — warnanya ikut sora sekarang */
+.asanoha {
+  background-image:
+    linear-gradient(60deg, rgba(61, 125, 174, 0.05) 1px, transparent 1px),
+    linear-gradient(-60deg, rgba(61, 125, 174, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* NEW — Sakura petal drift. Motif baru: kelopak bunga sakura kecil yang
+   bertebaran, dipakai sebagai elemen dekoratif tambahan (mis. di belakang
+   kartu pencapaian/hero) — melengkapi seigaiha (ombak) dengan simbol
+   sakura yang lebih literal, ciri khas dari palet baru ini. Dibuat dari
+   1 shape kelopak yang di-rotate 4 arah supaya terasa "jatuh natural",
+   bukan grid yang kaku. */
+.sakura-petals {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='%23C24D77'%3E%3Cpath d='M12 8c3 0 5 3 4 6-1 2-4 3-6 1-2-2-1-6 2-7z' transform='rotate(15 12 8)'/%3E%3Cpath d='M52 20c3 0 5 3 4 6-1 2-4 3-6 1-2-2-1-6 2-7z' transform='rotate(-40 52 20)'/%3E%3Cpath d='M28 46c3 0 5 3 4 6-1 2-4 3-6 1-2-2-1-6 2-7z' transform='rotate(80 28 46)'/%3E%3Cpath d='M60 58c3 0 5 3 4 6-1 2-4 3-6 1-2-2-1-6 2-7z' transform='rotate(-10 60 58)'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 72px 72px;
+  opacity: 0.5;
+}
+
+/* Accent underline under headings (Japanese editorial touch) — sekarang sakura */
+.jp-rule::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 4px;
+  margin-top: 8px;
+  border-radius: 2px;
+  background-color: var(--color-sakura);
+}
+
+/* Section rule — signature sakura brushstroke under app section titles */
+.lf-section-rule {
+  position: relative;
+  display: inline-block;
+}
+.lf-section-rule::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 36px;
+  height: 3px;
+  border-radius: 2px;
+  background-color: var(--color-sakura);
+}
+
+/* Display number — large, tight, bold stats that celebrate progress
+   (used for Kata / Streak / XP figures across student pages) */
+.lf-stat {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--color-ink);
+}
+.lf-stat-sora { color: var(--color-sora); }
+.lf-stat-gold { color: var(--color-gold-app); }
+.lf-stat-sakura { color: var(--color-sakura); }
+
+/* Kanji watermark for empty states — large faint Japanese glyph, no mascot */
+.lf-kanji-watermark {
+  font-family: var(--font-jp);
+  font-weight: 700;
+  color: var(--color-sora);
+  opacity: 0.06;
+  user-select: none;
+  pointer-events: none;
+  line-height: 1;
+}
+
+/* Scrollbars inside panels */
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(61, 125, 174, 0.25);
+  border-radius: 999px;
+}
+
+/* Hide scrollbar for horizontal chip rows */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ============================================================
+   LinguaFlow Signature Elements
+   ============================================================ */
+
+/* The Sakura Brushstroke — signature accent line (dulu "vermillion brushstroke") */
+.lf-stroke {
+  display: block;
+  width: 0;
+  height: 3px;
+  border-radius: 2px;
+  background-color: var(--color-sakura);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.lf-stroke.reveal {
+  width: 60px;
+}
+
+/* Kanji Watermark — background decorative text */
+.lf-kanji {
+  font-family: var(--font-jp);
+  font-weight: 700;
+  opacity: 0.03;
+  user-select: none;
+  pointer-events: none;
+  position: absolute;
+}
+
+/* Signature ending sequence — sakura brushstroke */
+.lf-ending-line {
+  display: block;
+  width: 0;
+  height: 3px;
+  border-radius: 2px;
+  background-color: var(--color-sakura);
+  opacity: 0;
+  transform: translateY(16px);
+  animation: lf-ending-stroke-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+}
+
+@keyframes lf-ending-stroke-in {
+  0% { opacity: 0; width: 0; transform: translateY(16px); }
+  100% { opacity: 1; width: 60px; transform: translateY(0); }
+}
+
+/* App mockup entrance (Scene 2) */
+.lf-laptop-enter {
+  animation: lf-laptop-rise 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes lf-laptop-rise {
+  from { transform: translateY(80vh) rotateX(12deg); opacity: 0; }
+  to { transform: translateY(0) rotateX(0deg); opacity: 1; }
+}
+
+/* Chat bubble typing sequence */
+.lf-chat-bubble {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: lf-bubble-in 0.4s ease-out forwards;
+}
+.lf-chat-bubble:nth-child(1) { animation-delay: 0.3s; }
+.lf-chat-bubble:nth-child(2) { animation-delay: 1.6s; }
+.lf-chat-bubble:nth-child(3) { animation-delay: 1.9s; }
+
+@keyframes lf-bubble-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Waveform pulse for speech scene */
+.lf-waveform-bar {
+  animation: lf-waveform 1.2s ease-in-out infinite;
+}
+.lf-waveform-bar:nth-child(1) { animation-delay: 0s; }
+.lf-waveform-bar:nth-child(2) { animation-delay: 0.05s; }
+.lf-waveform-bar:nth-child(3) { animation-delay: 0.1s; }
+.lf-waveform-bar:nth-child(4) { animation-delay: 0.15s; }
+.lf-waveform-bar:nth-child(5) { animation-delay: 0.2s; }
+.lf-waveform-bar:nth-child(6) { animation-delay: 0.25s; }
+.lf-waveform-bar:nth-child(7) { animation-delay: 0.3s; }
+
+@keyframes lf-waveform {
+  0%, 100% { transform: scaleY(0.4); opacity: 0.6; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+/* Score counter entrance */
+.lf-score-enter {
+  animation: lf-score-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+  opacity: 0;
+}
+@keyframes lf-score-pop {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Impact number — single per screen */
+.lf-impact-number {
+  animation: lf-impact-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+@keyframes lf-impact-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ---- utility animations (app + lander shared) ---- */
+@keyframes float-up {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.animate-float-up { animation: float-up 0.4s ease-out both; }
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  70% { transform: scale(1.25); opacity: 0; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+.animate-pulse-ring { animation: pulse-ring 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+
+@keyframes typing-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+.animate-typing-dot { animation: typing-dot 1.2s infinite; }
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float-slow { animation: float-slow 5s ease-in-out infinite; }
+.animate-float-slower { animation: float-slow 7s ease-in-out infinite; }
+
+/* Kelopak sakura jatuh — dulu "drift" ini cuma dipakai untuk kanji watermark
+   yang melayang perlahan; sekarang juga dipakai untuk elemen kelopak sakura
+   baru, jadi rotasinya sedikit dibesarkan supaya terlihat seperti kelopak
+   yang berputar pelan saat jatuh, bukan cuma glyph statis yang bergeser. */
+@keyframes drift {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.05; }
+  50% { opacity: 0.12; }
+  100% { transform: translateY(-40px) rotate(16deg); opacity: 0.05; }
+}
+.animate-drift { animation: drift 14s ease-in-out infinite; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 28s linear infinite; }
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+}
+
+.tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  will-change: transform;
+}
+.tilt:hover { box-shadow: 0 18px 50px rgba(61, 125, 174, 0.2); }
+.tilt-inner { transform: translateZ(40px); }
+
+/* Glow pulse — dulu di-tint merah vermillion (200,55,58), sekarang sakura */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(194, 77, 119, 0.0); }
+  50% { box-shadow: 0 10px 40px rgba(194, 77, 119, 0.25); }
+}
+.animate-glow { animation: glow-pulse 3.5s ease-in-out infinite; }
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ============================================================
+   Dark Mode (class-based)
+   ============================================================ */
+.dark {
+  /* PENTING: --color-cream, --color-cream-deep, --color-yozora,
+     --color-yozora-soft, dan --color-gold (versi landing) SENGAJA TIDAK
+     di-override di sini lagi.
+
+     Bug yang terjadi sebelumnya: landing page (Hero, LandingNav,
+     LandingFooter, ProductReveal, LeaderboardScene, EndingScene, dst)
+     memakai bg-cream + text-yozora sebagai pasangan warna dasarnya di
+     MANA PUN di landing (bukan cuma di adegan sinematik) — cream selalu
+     dimaksudkan sebagai warna TERANG dan yozora selalu sebagai warna
+     GELAP, supaya kontras teks/latar selalu terjaga. Waktu mode gelap
+     aktif, --color-cream dulu ikut di-override jadi warna gelap
+     (#1c1a20) sementara --color-yozora juga tetap gelap — hasilnya teks
+     "text-yozora" di atas "bg-cream" jadi gelap-di-atas-gelap, nyaris
+     tidak kelihatan (persis seperti di screenshot yang dilaporkan).
+
+     Landing page memang dirancang sebagai halaman marketing dengan
+     identitas visual TETAP (skema cream+yozora+sakura), tidak perlu ikut
+     mode gelap/terang milik dashboard produk — makanya token-token ini
+     sekarang dibiarkan konstan di semua mode. Yang MEMANG perlu berubah
+     saat mode gelap (dipakai di dashboard admin/guru/murid & halaman
+     login/register): warm-white, paper, ink, ink-soft, line, sora,
+     sakura, gold-app, success, error — token-token itu tetap di-override
+     di bawah ini. */
+  --color-ink: #e9e4e8;
+  --color-ink-soft: #948d99;
+  --color-line: #322c37;
+  --color-sora: #7cabd6;
+  --color-sora-tint: #649bcc;
+  --color-sora-tint-2: #4f86bd;
+  --color-sora-tint-soft: #1c2b38;
+  --color-sakura: #e08cae;
+  --color-sakura-soft: #ec9fbb;
+  --color-sakura-tint: #3a2530;
+  --color-sakura-tint-soft: #2a1e26;
+  --color-warm-white: #16141a;
+  --color-paper: #201d24;
+  --color-success: #34d399;
+  --color-error: #f87171;
+  --color-gold-app: #e8b04b;
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --shadow-soft-lg: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+.dark .seigaiha {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Cpath d='M0 20c5-8 15-8 20 0M20 20c5-8 15-8 20 0M-10 10c5-8 15-8 20 0M10 10c5-8 15-8 20 0M30 10c5-8 15-8 20 0' fill='none' stroke='%23e9e4e8' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+.dark .sakura-petals {
+  opacity: 0.35;
+}
+
+.dark body {
+  background-color: var(--color-warm-white);
+  color: var(--color-ink);
+}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
