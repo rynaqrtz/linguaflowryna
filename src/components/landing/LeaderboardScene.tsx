@@ -6,10 +6,6 @@ import { Crown, Flame } from "lucide-react";
 import { viewportOnce } from "@/lib/motion";
 import { ScrollHint } from "@/components/landing/ScrollHint";
 
-/**
- * Scene 7 — LEADERBOARD SCENE
- * Podium animation with counting XP.
- */
 const top3 = [
   { rank: 1, name: "Budi Santoso", xp: 3580, streak: 24, initial: "BS" },
   { rank: 2, name: "Siti Nurhaliza", xp: 3120, streak: 18, initial: "SN" },
@@ -25,7 +21,6 @@ export function LeaderboardScene() {
   return (
     <section aria-label="Leaderboard" ref={ref} className="relative h-[130vh] bg-cream">
       <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden">
-        {/* Kanji watermark */}
         <span className="lf-kanji text-[30vw] left-[-10%] bottom-[-10%] text-yozora/5">競</span>
 
         <div className="flex w-full max-w-4xl flex-1 flex-col items-center justify-center px-6 pb-8 md:px-10 md:pb-10">
@@ -37,9 +32,7 @@ export function LeaderboardScene() {
               Peringkat Kelas — XII RPL 1
             </p>
 
-            {/* podium */}
             <div className="flex items-end justify-center gap-4">
-              {/* 2nd */}
               <div className="flex flex-1 flex-col items-center">
                 <div className="flex h-24 w-full flex-col items-center justify-end rounded-t-2xl bg-yozora/20 md:h-28">
                   <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-yozora text-sm font-bold text-cream">
@@ -50,10 +43,8 @@ export function LeaderboardScene() {
                 <p className="text-xs text-ink-soft">{top3[1].xp.toLocaleString()} XP</p>
               </div>
 
-              {/* 1st */}
               <div className="flex flex-1 flex-col items-center">
                 <div className="relative flex h-32 w-full flex-col items-center justify-end rounded-t-2xl bg-gradient-to-t from-yozora to-yozora/60 md:h-40">
-                  {/* crown */}
                   <div className="absolute -top-4 left-1/2 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full bg-gold shadow-lg">
                     <Crown size={16} className="text-yozora" />
                   </div>
@@ -65,7 +56,6 @@ export function LeaderboardScene() {
                 <p className="text-xs font-semibold text-gold">{top3[0].xp.toLocaleString()} XP</p>
               </div>
 
-              {/* 3rd */}
               <div className="flex flex-1 flex-col items-center">
                 <div className="flex h-20 w-full flex-col items-center justify-end rounded-t-2xl bg-yozora/20 md:h-24">
                   <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-yozora text-sm font-bold text-cream">
@@ -77,7 +67,6 @@ export function LeaderboardScene() {
               </div>
             </div>
 
-            {/* current user highlight */}
             <div className="mx-auto mt-10 max-w-sm rounded-xl border border-sakura/20 bg-sakura/5 p-4">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-sakura text-sm font-bold text-cream">

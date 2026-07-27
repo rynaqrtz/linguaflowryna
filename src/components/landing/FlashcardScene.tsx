@@ -4,10 +4,6 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { ScrollHint } from "@/components/landing/ScrollHint";
 
-/**
- * Scene 6 — FLASHCARD SCENE
- * A single card flips 3D. Clean. Focused. Meditative.
- */
 export function FlashcardScene() {
   const ref = useRef<HTMLElement>(null);
   const prefersReduced = useReducedMotion();
@@ -31,13 +27,11 @@ export function FlashcardScene() {
             Flashcard
           </motion.p>
 
-          {/* 3D flip card */}
           <div className="perspective-[800px] mx-auto w-full" style={{ perspective: 800 }}>
             <motion.div
               className="relative mx-auto h-[340px] w-full max-w-sm cursor-default"
               style={{ transformStyle: "preserve-3d", rotateY }}
             >
-              {/* front */}
               <div
                 className="absolute inset-0 flex flex-col items-center justify-center rounded-3xl border border-line bg-white p-8 shadow-xl backface-hidden dark:bg-yozora-soft/80"
                 style={{ backfaceVisibility: "hidden" }}
@@ -48,7 +42,6 @@ export function FlashcardScene() {
                 <span className="mt-8 text-xs uppercase tracking-[0.2em] text-ink-soft/60">Scroll to reveal</span>
               </div>
 
-              {/* back */}
               <div
                 className="absolute inset-0 flex flex-col items-center justify-center rounded-3xl border border-line bg-yozora p-8 shadow-xl backface-hidden"
                 style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
@@ -58,11 +51,12 @@ export function FlashcardScene() {
                 <p lang="ja" className="jp mt-6 text-sm text-cream/60">毎日ご飯を食べる</p>
                 <p className="mt-1 text-xs text-cream/40">Setiap hari makan nasi</p>
 
-                {/* progress */}
                 <motion.div className="mt-8 w-full">
                   <div className="flex justify-between text-xs text-cream/60">
                     <span>Progress</span>
-                    <motion.span>{progress}</motion.span>
+                    <span className="flex items-center gap-0.5">
+                      <motion.span>{progress}</motion.span>%
+                    </span>
                   </div>
                   <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/10">
                     <motion.div

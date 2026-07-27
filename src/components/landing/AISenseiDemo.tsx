@@ -5,10 +5,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { ScrollHint } from "@/components/landing/ScrollHint";
 
-/**
- * Scene 4 — AI SENSEI DEMO
- * Chat panel slides from right. Bubbles appear with typing delay.
- */
 export function AISenseiDemo() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
@@ -26,7 +22,6 @@ export function AISenseiDemo() {
             style={{ x: xPanel, opacity: opPanel }}
             className="w-full rounded-2xl border border-line bg-white p-6 shadow-xl md:p-8 dark:bg-yozora-soft/80"
           >
-            {/* header */}
             <div className="mb-6 flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gold/20">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-gold">
@@ -34,14 +29,12 @@ export function AISenseiDemo() {
                 </svg>
               </span>
               <div>
-                <p className="text-sm font-bold text-yozora">Teman Belajar</p>
-                <p className="text-xs text-ink-soft">Siap bantu kamu belajar</p>
+                <p className="text-sm font-bold text-yozora">AI Sensei</p>
+                <p className="text-xs text-ink-soft">Siap bantu kamu belajar, 24 jam</p>
               </div>
             </div>
 
-            {/* chat bubbles */}
             <div className="space-y-4">
-              {/* user bubble */}
               <motion.div
                 style={{ opacity: bubble1 }}
                 className="flex justify-end"
@@ -51,7 +44,6 @@ export function AISenseiDemo() {
                 </div>
               </motion.div>
 
-              {/* AI thinking dots */}
               <motion.div
                 style={{ opacity: bubble2 }}
                 className="flex items-center gap-2"
@@ -63,7 +55,6 @@ export function AISenseiDemo() {
                 </div>
               </motion.div>
 
-              {/* AI response */}
               <motion.div
                 style={{ opacity: bubble3 }}
                 className="flex justify-start"

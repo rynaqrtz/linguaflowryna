@@ -4,11 +4,6 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ScrollHint } from "@/components/landing/ScrollHint";
 
-/**
- * Scene 5 — SPEECH RECOGNITION DEMO
- * Navy background always opaque. Content reveals from top on scroll.
- * No bgOpacity transition — prevents "blur anomaly" on scene entry.
- */
 const bars = [1, 2, 3, 4, 5, 6, 7];
 
 export function SpeechScene() {
@@ -21,7 +16,6 @@ export function SpeechScene() {
   return (
     <section aria-label="Speech recognition demo" ref={ref} className="relative h-[140vh] bg-yozora">
       <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden">
-        {/* Kanji watermark */}
         <span className="lf-kanji text-[28vw] right-[-8%] top-[-10%] text-white/5">
           話
         </span>
@@ -31,12 +25,10 @@ export function SpeechScene() {
             style={{ y: yContent, opacity: opContent }}
             className="w-full text-center"
           >
-            {/* label */}
             <p className="mb-10 text-xs font-semibold uppercase tracking-[0.4em] text-gold">
               Latihan Ucapan
             </p>
 
-            {/* target sentence */}
             <div className="mb-14">
               <p lang="ja" className="jp-bold text-5xl text-cream md:text-7xl">
                 おはようございます
@@ -44,7 +36,6 @@ export function SpeechScene() {
               <p className="mt-3 text-lg text-cream/50">Ohayou gozaimasu</p>
             </div>
 
-            {/* waveform */}
             <div className="mx-auto flex h-24 items-center justify-center gap-1.5" aria-hidden="true">
               {bars.map((_, i) => (
                 <div
@@ -55,7 +46,6 @@ export function SpeechScene() {
               ))}
             </div>
 
-            {/* score — revealed later */}
             <motion.div
               style={{ opacity: scoreReveal, scale: scoreReveal }}
               className="mt-10"
