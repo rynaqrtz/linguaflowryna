@@ -24,10 +24,6 @@ interface QuizQuestion {
   correct: string;
 }
 
-/** Konfigurasi soal: cuma kanji + pilihan jawaban + jawaban benar yang
- *  ditulis di sini. `furigana` diambil dari lib/vocabulary.ts lewat
- *  `getWordByKanji`, supaya tidak menulis ulang data kata yang sudah ada
- *  di sana (dulu furigana masing-masing kata di-hardcode ulang di sini). */
 const quizConfig: Omit<QuizQuestion, "id" | "furigana">[] = [
   {
     kanji: "食べる",
@@ -86,7 +82,6 @@ const quizConfig: Omit<QuizQuestion, "id" | "furigana">[] = [
   },
 ];
 
-/** Gabungkan konfigurasi soal di atas dengan furigana dari kamus bersama. */
 const soalList: QuizQuestion[] = quizConfig.map((item, i) => ({
   id: i + 1,
   furigana: getWordByKanji(item.kanji)?.furigana ?? "",
@@ -108,7 +103,6 @@ export default function KuisSoal() {
   const progress = ((currentIndex + 1) / total) * 100;
   const isLast = currentIndex === total - 1;
 
-  // Countdown timer
   useEffect(() => {
     if (answered) return;
     const interval = setInterval(() => {
@@ -124,7 +118,6 @@ export default function KuisSoal() {
     return () => clearInterval(interval);
   }, [answered, currentIndex]);
 
-  // Keyboard shortcuts: 1-4 for options
   useEffect(() => {
     if (answered) return;
     function handleKey(e: KeyboardEvent) {
@@ -155,11 +148,7 @@ export default function KuisSoal() {
   return (
     <StudentShell title="Soal">
       <AnimatedPage>
-        {/* ════════════════════════════════════════ */}
-        {/* PREMIUM PROGRESS + TIMER */}
-        {/* ════════════════════════════════════════ */}
         <div className="flex items-center gap-3">
-          {/* Progress track with segment indicators */}
           <div className="relative flex-1">
             <div className="h-2 rounded-full bg-sora-tint-soft overflow-hidden">
               <motion.div
@@ -169,7 +158,6 @@ export default function KuisSoal() {
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               />
             </div>
-            {/* Dots for each question */}
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-0.5">
               {Array.from({ length: total }).map((_, i) => (
                 <span
@@ -192,7 +180,6 @@ export default function KuisSoal() {
             {currentIndex + 1}/{total}
           </motion.span>
 
-          {/* Premium timer badge */}
           <motion.div
             className={`relative flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-all duration-500 ${
               urgent
@@ -224,9 +211,6 @@ export default function KuisSoal() {
           </motion.div>
         </div>
 
-        {/* ════════════════════════════════════════ */}
-        {/* QUESTION CARD */}
-        {/* ════════════════════════════════════════ */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSoal.id}
@@ -235,9 +219,7 @@ export default function KuisSoal() {
             exit={{ opacity: 0, x: -40, scale: 0.97 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Question display */}
             <div className="mt-6 rounded-card border border-line bg-paper p-6 text-center shadow-soft">
-              {/* Question number badge */}
               <div className="mx-auto mb-4 inline-flex items-center gap-1.5 rounded-full bg-sora-tint-soft px-3 py-1">
                 <Zap size={12} className="text-sora" />
                 <span className="text-[11px] font-semibold text-sora">Soal {currentIndex + 1}</span>
@@ -250,9 +232,6 @@ export default function KuisSoal() {
               <p className="mt-4 text-base font-bold text-ink">{currentSoal.question}</p>
             </div>
 
-            {/* ════════════════════════════════════════ */}
-            {/* PREMIUM OPTIONS */}
-            {/* ════════════════════════════════════════ */}
             <div className="mt-4 space-y-2.5">
               {currentSoal.options.map((o, i) => {
                 const isCorrect = o.id === currentSoal.correct;
@@ -293,7 +272,6 @@ export default function KuisSoal() {
                         : "cursor-default"
                     }`}
                   >
-                    {/* Letter badge */}
                     <span
                       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border-2 text-sm font-bold transition-all duration-200 ${labelCls} ${
                         !answered
@@ -311,7 +289,6 @@ export default function KuisSoal() {
                     </span>
                     <span className={`transition-colors duration-200 ${textCls}`}>{o.text}</span>
 
-                    {/* Right indicator */}
                     {!answered && (
                       <ChevronRight size={16} className="ml-auto shrink-0 text-ink-soft/30 transition-all group-hover:text-sora group-hover:translate-x-0.5" />
                     )}
@@ -320,9 +297,6 @@ export default function KuisSoal() {
               })}
             </div>
 
-            {/* ════════════════════════════════════════ */}
-            {/* TIMEOUT MESSAGE */}
-            {/* ════════════════════════════════════════ */}
             <AnimatePresence>
               {timeoutTriggered && !picked && (
                 <motion.div
@@ -345,9 +319,6 @@ export default function KuisSoal() {
           </motion.div>
         </AnimatePresence>
 
-        {/* ════════════════════════════════════════ */}
-        {/* NEXT / FINISH BUTTON */}
-        {/* ════════════════════════════════════════ */}
         <motion.div
           className="mt-5"
           initial={{ opacity: 0 }}
@@ -378,9 +349,6 @@ export default function KuisSoal() {
           </Button>
         </motion.div>
 
-        {/* ════════════════════════════════════════ */}
-        {/* KEYBOARD HINT */}
-        {/* ════════════════════════════════════════ */}
         <motion.div
           className="mt-4 flex items-center justify-center gap-3"
           initial={{ opacity: 0 }}

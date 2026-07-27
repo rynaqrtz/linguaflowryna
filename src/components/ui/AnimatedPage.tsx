@@ -11,7 +11,6 @@ const pageVariants = {
   },
 };
 
-/** Lightweight entrance animation for every student page. */
 export function AnimatedPage({ children }: { children: React.ReactNode }) {
   return (
     <motion.div variants={pageVariants} initial="initial" animate="animate">
@@ -20,7 +19,6 @@ export function AnimatedPage({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Stagger container — children with `item` variant will stagger in. */
 export const staggerContainer = {
   initial: {},
   animate: {

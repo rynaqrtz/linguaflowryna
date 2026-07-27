@@ -1,21 +1,12 @@
-// Client-side progress store (no backend, no DB).
-// Persists to localStorage so a Gen-Z learner sees real, consistent numbers
-// across reloads — no fake hardcoded stats.
-//
-// Note on mounting: useLocalStorage renders with `initial` on first paint, then
-// hydrates from localStorage in an effect. We therefore seed with realistic
-// starting values (so the UI never looks empty) and let storage take over
-// after mount.
-
 import { useLocalStorage } from "@/lib/use-local-storage";
 
 export interface ProgressState {
   xp: number;
   streak: number;
-  mastered: string[]; // kanji that the user marked "hafal"
-  reviewed: string[]; // every kanji studied at least once
-  srsQueue: SrsItem[]; // cards to review again (from "belum hafal")
-  lastSessionDay: string; // YYYY-MM-DD of last study day
+  mastered: string[];
+  reviewed: string[];
+  srsQueue: SrsItem[];
+  lastSessionDay: string;
   totalSessions: number;
 }
 
@@ -25,7 +16,7 @@ export interface SrsItem {
   romaji: string;
   arti: string;
   level: string;
-  dueDay: string; // YYYY-MM-DD when it should reappear
+  dueDay: string;
 }
 
 const SEED: ProgressState = {
@@ -38,11 +29,8 @@ const SEED: ProgressState = {
   totalSessions: 0,
 };
 
-// Words in the current chapter (Flashcard N5 — Kata Kerja). Drives the hero
-// "Progress Bab" bar so it reflects real study instead of a hardcoded 65%.
 const BAB_SIZE = 20;
 
-/** Percentage of the current chapter completed (0–100), based on real reviews. */
 export function babProgress(state: ProgressState): number {
   if (BAB_SIZE <= 0) return 0;
   return Math.min(100, Math.round((state.reviewed.length / BAB_SIZE) * 100));
@@ -58,7 +46,6 @@ function daysBetween(a: string, b: string): number {
   return Math.round((db.getTime() - da.getTime()) / 86_400_000);
 }
 
-/** Returns updated streak + lastSessionDay given a study action today. */
 export function bumpStreak(streak: number, lastSessionDay: string, today = dayKey()): { streak: number; lastSessionDay: string } {
   if (lastSessionDay === today) return { streak, lastSessionDay };
   const gap = lastSessionDay ? daysBetween(lastSessionDay, today) : 999;
@@ -70,7 +57,6 @@ export function useProgress() {
   return useLocalStorage<ProgressState>("lf-progress", SEED);
 }
 
-/** Add XP + record studied kanji + extend streak. Returns the next state. */
 export function recordStudy(
   prev: ProgressState,
   learned: { kanji: string; xp?: number }[],
@@ -89,7 +75,6 @@ export function recordStudy(
   };
 }
 
-/** Mark a card as known (adds to mastered, removes from SRS queue). */
 export function markMastered(prev: ProgressState, kanji: string): ProgressState {
   return {
     ...prev,
@@ -98,13 +83,11 @@ export function markMastered(prev: ProgressState, kanji: string): ProgressState 
   };
 }
 
-/** Queue a card for review (from "belum hafal"). */
 export function queueReview(prev: ProgressState, item: SrsItem): ProgressState {
   if (prev.srsQueue.some((q) => q.kanji === item.kanji)) return prev;
   return { ...prev, srsQueue: [...prev.srsQueue, item] };
 }
 
-/** Due SRS items for today. */
 export function dueReviews(state: ProgressState, today = dayKey()): SrsItem[] {
   return state.srsQueue.filter((q) => q.dueDay <= today);
 }

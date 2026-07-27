@@ -2,10 +2,6 @@
 
 import { motion } from "framer-motion";
 
-/**
- * Scroll-down indicator placed BELOW scene content.
- * Uses margin-top for distance from content above.
- */
 export function ScrollHint() {
   return (
     <motion.div

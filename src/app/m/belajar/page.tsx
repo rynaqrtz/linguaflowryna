@@ -34,25 +34,19 @@ export default function ChooseDeck() {
     <StudentShell noHeader>
       <AnimatedPage>
         <motion.div variants={staggerContainer} initial="initial" animate="animate">
-          {/* ════════════════════════════════════════════ */}
-          {/* HERO BANNER — greeting & progress */}
-          {/* ════════════════════════════════════════════ */}
           <motion.div variants={staggerItem}>
             <div className={"relative overflow-hidden rounded-card bg-gradient-to-br px-5 py-6 text-white " + timeGreeting.gradient}>
-              {/* Time-based glow */}
               {timeGreeting.period === "malam" && (
                 <div className="absolute inset-0 opacity-20" style={{background: "radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 70%)"}} />
               )}
               {timeGreeting.period === "pagi" && (
                 <div className="absolute inset-0" style={{background: "radial-gradient(ellipse at 20% 30%, rgba(255,200,100,0.25) 0%, transparent 60%)"}} />
               )}
-              {/* Decorative elements */}
               <div className="seigaiha absolute inset-0 opacity-[0.07]" />
               <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/5" />
               <div className="absolute -bottom-6 -left-6 h-24 w-24 rounded-full bg-white/[0.03]" />
 
               <div className="relative">
-                {/* Top row: greeting + badge */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white">
@@ -68,7 +62,6 @@ export default function ChooseDeck() {
                   </Badge>
                 </div>
 
-                {/* Progress bar */}
                 <div className="mt-4">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-white/70">Progress Keseluruhan</span>
@@ -84,7 +77,6 @@ export default function ChooseDeck() {
                   </div>
                 </div>
 
-                {/* Stats row */}
                 <div className="mt-4 grid grid-cols-3 gap-3">
                   <div className="rounded-btn bg-white/10 px-3 py-2 text-center">
                     <p className="text-lg font-bold leading-none">{totalDone}</p>
@@ -100,7 +92,6 @@ export default function ChooseDeck() {
                   </div>
                 </div>
 
-                {/* CTA */}
                 <Link href="/m/belajar/sesi" className="mt-4 block">
                   <motion.div
                     whileHover={{ scale: 1.01 }}
@@ -116,9 +107,6 @@ export default function ChooseDeck() {
             </div>
           </motion.div>
 
-          {/* ════════════════════════════════════════════ */}
-          {/* LEVEL SELECTOR */}
-          {/* ════════════════════════════════════════════ */}
           <motion.div variants={staggerItem} className="mt-5">
             <h2 className="text-base font-bold text-ink">Pilih Level JLPT</h2>
             <div className="mt-2 flex gap-2">
@@ -138,7 +126,6 @@ export default function ChooseDeck() {
                           : "bg-paper text-ink-soft border border-line hover:border-sora/30")
                     }
                   >
-                    {/* Active indicator dot */}
                     {active && (
                       <motion.span
                         className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[9px] font-bold text-white"
@@ -158,9 +145,6 @@ export default function ChooseDeck() {
             </div>
           </motion.div>
 
-          {/* ════════════════════════════════════════════ */}
-          {/* QUICK STAT — ring + kata mastered */}
-          {/* ════════════════════════════════════════════ */}
           <motion.div variants={staggerItem}>
             <Card className="mt-4 flex items-center gap-5 transition-all hover:shadow-soft-lg" padded>
               <div className="shrink-0">
@@ -201,9 +185,6 @@ export default function ChooseDeck() {
             </Card>
           </motion.div>
 
-          {/* ════════════════════════════════════════════ */}
-          {/* CATEGORIES */}
-          {/* ════════════════════════════════════════════ */}
           <motion.div variants={staggerItem} className="mt-6">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-base font-bold text-ink">Kategori</h2>
@@ -263,9 +244,6 @@ export default function ChooseDeck() {
             </div>
           </motion.div>
 
-          {/* ════════════════════════════════════════════ */}
-          {/* START SESSION CTA */}
-          {/* ════════════════════════════════════════════ */}
           <motion.div variants={staggerItem} className="mt-6">
             <Link href="/m/belajar/sesi">
               <motion.div whileTap={{ scale: 0.97 }}>

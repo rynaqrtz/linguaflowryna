@@ -52,11 +52,7 @@ export default function KuisReview() {
     <StudentShell noHeader>
       <AnimatedPage>
         <motion.div variants={staggerContainer} initial="initial" animate="animate">
-          {/* ════════════════════════════════════════ */}
-          {/* SCORE HERO — dramatic reveal */}
-          {/* ════════════════════════════════════════ */}
           <motion.div variants={staggerItem} className="flex flex-col items-center pt-4 text-center">
-            {/* Score ring with glow */}
             <div className="relative">
               <motion.div
                 initial={{ scale: 0.6, opacity: 0 }}
@@ -69,7 +65,6 @@ export default function KuisReview() {
                 </RingProgress>
               </motion.div>
 
-              {/* Decorative sparkle dots */}
               {score >= 80 && (
                 <>
                   <motion.span
@@ -102,7 +97,6 @@ export default function KuisReview() {
               )}
             </div>
 
-            {/* Score label */}
             <motion.div
               className="mt-3 flex items-center justify-center gap-2"
               initial={{ opacity: 0, y: 8 }}
@@ -133,9 +127,6 @@ export default function KuisReview() {
             </motion.p>
           </motion.div>
 
-          {/* ════════════════════════════════════════ */}
-          {/* STATS — premium cards */}
-          {/* ════════════════════════════════════════ */}
           <motion.div variants={staggerItem} className="mt-5 grid grid-cols-3 gap-2.5">
             {[
               { v: `${correctCount}/${review.length}`, l: "Benar", icon: Check, c: "text-success", bg: "bg-success/10" },
@@ -158,9 +149,6 @@ export default function KuisReview() {
             ))}
           </motion.div>
 
-          {/* ════════════════════════════════════════ */}
-          {/* TEACHER COMMENT — premium */}
-          {/* ════════════════════════════════════════ */}
           <motion.div variants={staggerItem}>
             <div className="mt-5 rounded-card border border-line bg-paper p-4 shadow-soft transition-all hover:shadow-soft-lg">
               <div className="flex items-start gap-3">
@@ -188,9 +176,6 @@ export default function KuisReview() {
             </div>
           </motion.div>
 
-          {/* ════════════════════════════════════════ */}
-          {/* REVIEW ACCORDION — polished */}
-          {/* ════════════════════════════════════════ */}
           <motion.div variants={staggerItem} className="mt-5">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-base font-bold text-ink">Review Jawaban</h2>
@@ -225,7 +210,6 @@ export default function KuisReview() {
                           : "bg-paper hover:bg-sora-tint-soft/30"
                       }`}
                     >
-                      {/* Status indicator */}
                       <span
                         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
                           r.ok
@@ -291,9 +275,6 @@ export default function KuisReview() {
             </div>
           </motion.div>
 
-          {/* ════════════════════════════════════════ */}
-          {/* ACTION BUTTONS — premium */}
-          {/* ════════════════════════════════════════ */}
           <motion.div variants={staggerItem} className="mt-6 space-y-2.5">
             <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }}>
               <Button

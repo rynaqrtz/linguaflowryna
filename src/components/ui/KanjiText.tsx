@@ -16,7 +16,6 @@ const sizes = {
   xl: { k: "text-8xl", f: "text-xl", r: "text-base" },
 };
 
-/** Renders kanji + optional furigana (kana) + romaji with proper JP font. */
 export function KanjiText({
   kanji,
   furigana,

@@ -20,7 +20,6 @@ const ThemeContext = createContext<ThemeCtx>({
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useLocalStorage<Theme>("lf-theme", "light");
 
-  // Keep <html> class in sync
   useEffect(() => {
     const root = document.documentElement;
     if (theme === "dark") {

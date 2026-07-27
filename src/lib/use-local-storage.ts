@@ -13,10 +13,7 @@ export function useLocalStorage<T>(
       const stored = localStorage.getItem(key);
       if (stored !== null) {
         const parsed = JSON.parse(stored);
-        // Fall back to `initial` when the stored shape doesn't match the
-        // expected type (e.g. a stale/corrupt value from an older schema).
-        // Prevents runtime crashes like `prev.includes is not a function`
-        // when an array was previously stored as `{}`.
+
         let valid: unknown = parsed;
         if (Array.isArray(initial)) {
           valid = Array.isArray(parsed) ? parsed : initial;
@@ -33,7 +30,7 @@ export function useLocalStorage<T>(
         setValue(valid as T);
       }
     } catch {
-      // ignore
+
     }
   }, [key]);
 
@@ -44,7 +41,7 @@ export function useLocalStorage<T>(
         try {
           localStorage.setItem(key, JSON.stringify(resolved));
         } catch {
-          // ignore
+
         }
         return resolved;
       });

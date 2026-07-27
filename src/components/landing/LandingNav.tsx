@@ -17,11 +17,6 @@ function scrollToId(id: string) {
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-/**
- * Minimal auto-hiding landing nav.
- * Desktop: logo + center shortcuts + auth actions.
- * Mobile: logo + hamburger; shortcuts & auth live inside a dropdown sheet.
- */
 export function LandingNav() {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
@@ -34,7 +29,6 @@ export function LandingNav() {
     else setHidden(false);
   });
 
-  // Close the mobile sheet when tapping anywhere outside the header.
   useEffect(() => {
     if (!open) return;
     const onPointer = (e: PointerEvent) => {
@@ -65,7 +59,6 @@ export function LandingNav() {
           <span className="text-base font-bold tracking-tight text-yozora">LinguaFlow</span>
         </Link>
 
-        {/* Desktop shortcuts */}
         <div className="hidden items-center gap-1 md:flex">
           {shortcuts.map((s) => (
             <button
@@ -78,7 +71,6 @@ export function LandingNav() {
           ))}
         </div>
 
-        {/* Desktop auth */}
         <div className="hidden shrink-0 items-center gap-2 md:flex">
           <Link
             href="/login"
@@ -94,7 +86,6 @@ export function LandingNav() {
           </Link>
         </div>
 
-        {/* Mobile burger */}
         <button
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Tutup menu" : "Buka menu"}
@@ -107,7 +98,6 @@ export function LandingNav() {
         </button>
       </nav>
 
-      {/* Mobile dropdown sheet */}
       <AnimatePresence>
         {open && (
           <motion.div

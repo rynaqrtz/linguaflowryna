@@ -26,8 +26,7 @@ const initialTeachers: Teacher[] = [
 export default function KelolaGuru() {
   const [teachers, setTeachers] = useState(initialTeachers);
   const [modal, setModal] = useState(false);
-  // Dulu search bar ini murni dekorasi (tidak ada state/onChange) — ketik
-  // apa pun tidak menyaring apa-apa. Sekarang benar-benar menyaring.
+
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -36,8 +35,6 @@ export default function KelolaGuru() {
     return teachers.filter((t) => t.name.toLowerCase().includes(q) || t.email.toLowerCase().includes(q));
   }, [teachers, query]);
 
-  /** Toggle status Aktif/Nonaktif — dulu tombolnya tidak punya onClick
-   *  sama sekali. Belum ke backend, tapi setidaknya terasa berfungsi. */
   function toggleStatus(email: string) {
     setTeachers((prev) =>
       prev.map((t) => (t.email === email ? { ...t, status: t.status === "Aktif" ? "Nonaktif" : "Aktif" } : t)),
@@ -82,7 +79,6 @@ export default function KelolaGuru() {
         </Card>
       )}
 
-      {/* Mobile: card list */}
       <div className="mt-4 space-y-3 md:hidden">
         {filtered.map((t) => (
           <Card key={t.email} padded>
@@ -135,7 +131,6 @@ export default function KelolaGuru() {
         ))}
       </div>
 
-      {/* Desktop: table */}
       <Card className="mt-4 hidden overflow-hidden p-0 md:block" padded={false}>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[680px] text-sm">
@@ -197,7 +192,6 @@ export default function KelolaGuru() {
         </div>
       </Card>
 
-      {/* Modal tambah guru */}
       {modal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-ink/40" onClick={() => setModal(false)} />

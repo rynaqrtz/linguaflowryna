@@ -7,13 +7,13 @@ export type TimePeriod = "pagi" | "siang" | "sore" | "malam";
 
 export interface TimeGreeting {
   period: TimePeriod;
-  /** Indonesian greeting e.g. "Selamat Pagi" */
+
   greeting: string;
-  /** Japanese greeting e.g. "おはよう" */
+
   jpGreeting: string;
-  /** Lucide icon component for the time of day */
+
   icon: LucideIcon;
-  /** Tailwind gradient classes */
+
   gradient: string;
 }
 
@@ -46,7 +46,7 @@ function calcGreeting(): TimeGreeting {
       gradient: "from-[#d4836a] via-[#b98389] to-[#7c6a8c]",
     };
   }
-  // malam (18:00 - 04:59)
+
   return {
     period: "malam",
     greeting: "Selamat Malam",
@@ -56,13 +56,8 @@ function calcGreeting(): TimeGreeting {
   };
 }
 
-/**
- * Reactive hook that returns greeting + gradient based on current hour on the client.
- * Uses a default (siang) as initial SSR-safe value, then immediately updates in useEffect.
- * Polls every 60s for period transitions.
- */
 export function useTimeGreeting(): TimeGreeting {
-  // SSR-safe default: jangan panggil new Date() di server
+
   const [greeting, setGreeting] = useState<TimeGreeting>({
     period: "siang",
     greeting: "Selamat Siang",
@@ -72,11 +67,10 @@ export function useTimeGreeting(): TimeGreeting {
   });
 
   useEffect(() => {
-    // Set immediately on client to avoid hydration mismatch
+
     const update = () => setGreeting(calcGreeting());
     update();
 
-    // Poll every 60s — cukup akurat untuk period transitions
     const interval = setInterval(update, 60_000);
     return () => clearInterval(interval);
   }, []);

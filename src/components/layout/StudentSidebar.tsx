@@ -65,7 +65,6 @@ export function StudentSidebar() {
           );
         })}
       </nav>
-      {/* Dev-only role switcher — desktop only, hidden on mobile per UX rules */}
       <div className="hidden px-3 md:block">
         <RoleSwitcher current="murid" />
       </div>
@@ -83,7 +82,6 @@ export function StudentSidebar() {
 
   return (
     <>
-      {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 border-r border-line bg-paper md:block">
         {sidebar}
       </aside>

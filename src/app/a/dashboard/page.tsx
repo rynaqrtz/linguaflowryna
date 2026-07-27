@@ -1,26 +1,3 @@
-// src/app/a/dashboard/page.tsx
-//
-// UPGRADE UI/UX — perubahan dari versi sebelumnya:
-// 1. Dulu ke-4 kartu statistik semua identik (kotak ikon + angka + label +
-//    trend), pola generik yang persis sama di hampir semua dashboard admin
-//    bikinan AI. Sekarang kartu pertama (metrik paling penting, Total
-//    Murid) dibedakan dengan aksen sakura supaya mata langsung tertuju ke
-//    sana, sisanya tetap tenang di sora/netral — ada hierarki, bukan 4
-//    kotak yang beratnya sama semua.
-// 2. Dulu grafik aktivitas cuma div dengan height dinamis, dipaksa
-//    min-width 640px jadi selalu scroll horizontal di HP, tanpa garis
-//    bantu/label. Sekarang jadi grafik area SVG yang responsif (scale ke
-//    lebar layar berapa pun), ada garis bantu 0/50/100%, dan titik puncak
-//    ditandai dengan angka — lebih gampang dibaca sekilas.
-// 3. Kartu "Kelas Paling Aktif" & "Guru Paling Aktif" dulu murni
-//    tampilan, sekarang jadi interaktif (bisa diklik ke halaman kelas/guru
-//    terkait) dan tag ranking guru diberi warna emas/perak/perunggu untuk
-//    #1/#2/#3, bukan angka polos.
-// 4. Ditambah aksen dekoratif kelopak sakura yang SANGAT halus (opacity
-//    rendah) di belakang judul — identitas visual Jepang tanpa mengganggu
-//    keterbacaan data (dashboard admin harus tetap padat-informasi, motif
-//    dekoratif tidak boleh menyaingi angka).
-
 import Link from "next/link";
 import { TrendingUp, Users, UserCircle, ClipboardList, Activity, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/Card";
@@ -55,21 +32,12 @@ const topTeachers = [
   { name: "Eko Prasetyo", tasks: 15 },
 ];
 
-// Warna medali untuk 3 besar guru teraktif — dulu cuma angka "#1/#2/#3"
-// polos berwarna sora semua, jadi peringkat 1 sulit dibedakan sekilas
-// dari peringkat 3. Emas/perak/perunggu adalah konvensi yang sudah umum
-// dikenali, jadi tidak perlu penjelasan tambahan di UI.
 const medalStyle = [
   "bg-gold text-white",
-  "bg-[#a3b1c2] text-white", // perak — abu kebiruan netral, bukan bagian dari token brand
-  "bg-[#c98a52] text-white", // perunggu
+  "bg-[#a3b1c2] text-white",
+  "bg-[#c98a52] text-white",
 ];
 
-/** Grafik area SVG untuk tren aktivitas 30 hari. Dibuat manual (bukan
- *  library chart) supaya konsisten dengan gaya "hand-crafted" yang sudah
- *  dipakai di seluruh app dan tidak menambah dependency baru cuma untuk
- *  satu grafik. Skala mengikuti lebar viewBox, jadi responsif tanpa perlu
- *  scroll horizontal di layar sempit. */
 function ActivityChart({ data }: { data: { d: number; v: number }[] }) {
   const width = 600;
   const height = 160;
@@ -84,7 +52,6 @@ function ActivityChart({ data }: { data: { d: number; v: number }[] }) {
   const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
   const areaPath = `${linePath} L ${width} ${height} L 0 ${height} Z`;
 
-  // Cari hari dengan aktivitas tertinggi untuk ditandai sebagai puncak.
   const peakIndex = data.reduce((best, p, i) => (p.v > data[best].v ? i : best), 0);
   const peak = points[peakIndex];
 
@@ -97,8 +64,6 @@ function ActivityChart({ data }: { data: { d: number; v: number }[] }) {
         </linearGradient>
       </defs>
 
-      {/* Garis bantu 0% / 50% / 100% — dulu tidak ada referensi sama sekali,
-          jadi tinggi batang cuma bisa dibandingkan relatif ke batang lain. */}
       {[0, 0.5, 1].map((frac) => (
         <line
           key={frac}
@@ -114,8 +79,6 @@ function ActivityChart({ data }: { data: { d: number; v: number }[] }) {
       <path d={areaPath} fill="url(#activity-fill)" />
       <path d={linePath} fill="none" stroke="var(--color-sora)" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />
 
-      {/* Titik puncak ditandai eksplisit, bukan cuma batang tertinggi yang
-          harus ditebak dari sekilas melihat. */}
       <circle cx={peak.x} cy={peak.y} r={4.5} fill="var(--color-sakura)" stroke="white" strokeWidth={1.5} />
       <text
         x={Math.min(Math.max(peak.x, 20), width - 20)}
@@ -142,9 +105,6 @@ export default function AdminDashboard() {
   return (
     <>
       <div className="relative overflow-hidden rounded-card">
-        {/* Motif kelopak sakura sangat halus di belakang judul — identitas
-            visual, bukan gangguan. Kalau butuh dihilangkan cukup hapus
-            className "sakura-petals" di div ini. */}
         <div className="sakura-petals pointer-events-none absolute inset-0 opacity-40" aria-hidden="true" />
         <div className="relative px-0.5 py-1">
           <h1 className="text-2xl font-bold text-ink jp-rule">Dashboard — SMK Texar</h1>
@@ -157,14 +117,6 @@ export default function AdminDashboard() {
           const Icon = s.icon;
           return (
             <Link key={s.label} href={s.href}>
-              {/* Catatan: sengaja TIDAK pakai prop `interactive` dari Card di
-                  sini. Prop itu menempelkan handler onKeyDown ke <div>, dan
-                  karena halaman ini Server Component (tidak ada "use client"),
-                  Next.js menolak mengirim function sebagai prop ke elemen di
-                  situ saat build ("Event handlers cannot be passed to Client
-                  Component props"). Link pembungkusnya sudah jadi elemen
-                  <a> asli yang aksesibel via keyboard tanpa handler manual,
-                  jadi cukup styling hover-nya saja yang disamakan manual. */}
               <Card
                 padded
                 className={cn(

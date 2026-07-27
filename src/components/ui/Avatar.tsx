@@ -6,13 +6,10 @@ const palette = [
   'bg-[#9a6b16]', 'bg-[#b22f32]'
 ];
 
-/** Map a CSS color class to its actual hex via getComputedStyle. */
 function cssColor(cls: string): string {
-  // Fallback dipakai kalau dipanggil di server (belum ada `document`).
-  // Dulu warnanya #2b3a67 (indigo lama) — sekarang samakan dengan
-  // --color-sora yang baru (#3d7dae) supaya konsisten dengan tema baru.
+
   if (typeof document === "undefined") return "#3d7dae";
-  // Create a hidden element, apply the class, read computed bg
+
   const el = document.createElement("div");
   el.className = cls;
   el.style.position = "absolute";
@@ -24,7 +21,6 @@ function cssColor(cls: string): string {
   return color;
 }
 
-/** Deterministic color from a name string (returns hex). */
 export function colorFromName(name: string): string {
   let h = 0;
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
@@ -48,7 +44,7 @@ interface AvatarProps {
 
 export function Avatar({ name, size = 40, color, className, square }: AvatarProps) {
   const bg = color ?? colorFromName(name);
-  // If bg is a CSS class (starts with "bg-"), use it as className; otherwise fallback to inline style
+
   const isClass = bg.startsWith("bg-");
   return (
     <div

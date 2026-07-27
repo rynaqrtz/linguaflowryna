@@ -52,7 +52,6 @@ export default function TeacherReport() {
         </div>
       </div>
 
-      {/* Stat cards */}
       <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
           { k: "Rata-rata Skor", v: "78", icon: TrendingUp },
@@ -71,7 +70,6 @@ export default function TeacherReport() {
         })}
       </div>
 
-      {/* Category chart */}
       <Card className="mt-4" padded>
         <h2 className="text-sm font-bold tracking-tight text-ink">Rata-rata Skor per Kategori</h2>
         <div className="mt-4 space-y-3">
@@ -95,7 +93,6 @@ export default function TeacherReport() {
         </div>
       </Card>
 
-      {/* Student table (desktop) */}
       <Card className="mt-4 hidden overflow-hidden p-0 md:block" padded={false}>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[520px] text-sm">
@@ -128,7 +125,6 @@ export default function TeacherReport() {
         </div>
       </Card>
 
-      {/* Student cards (mobile) */}
       <div className="mt-4 space-y-3 md:hidden">
         {students.map((s) => (
           <Card key={s.name} padded>

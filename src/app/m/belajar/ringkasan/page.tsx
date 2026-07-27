@@ -13,14 +13,13 @@ import { useProgress, dueReviews } from "@/lib/progress";
 export default function SessionSummary() {
   const [progress] = useProgress();
   const due = dueReviews(progress);
-  const studiedNow = 3; // cards in the current deck
+  const studiedNow = 3;
   const xpGain = studiedNow * 20;
 
   return (
     <StudentShell noHeader>
       <AnimatedPage>
         <motion.div variants={staggerContainer} initial="initial" animate="animate">
-          {/* Success hero */}
           <motion.div variants={staggerItem} className="flex flex-col items-center pt-8 text-center">
             <motion.div
               className="relative flex h-24 w-24 items-center justify-center rounded-full bg-sora"
@@ -60,7 +59,6 @@ export default function SessionSummary() {
             </motion.p>
           </motion.div>
 
-          {/* Stats row — real numbers */}
           <motion.div variants={staggerItem} className="mt-6 grid grid-cols-3 gap-3">
             {[
               { v: String(progress.reviewed.length), l: "Kata Dipelajari", icon: FileText },
@@ -82,7 +80,6 @@ export default function SessionSummary() {
             ))}
           </motion.div>
 
-          {/* Words to review — real SRS queue */}
           <motion.section variants={staggerItem} className="mt-6">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-base font-bold text-ink">Perlu Diulang Nanti</h2>
@@ -115,7 +112,6 @@ export default function SessionSummary() {
             )}
           </motion.section>
 
-          {/* Actions */}
           <motion.div variants={staggerItem} className="mt-6 space-y-3">
             {due.length > 0 && (
               <motion.div whileTap={{ scale: 0.97 }}>

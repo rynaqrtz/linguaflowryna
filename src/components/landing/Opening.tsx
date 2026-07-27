@@ -3,47 +3,37 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-/**
- * Opening — a cinematic intro before the hero.
- * Cream void → single kanji fades in → thin line grows → dissolves.
- * - Skipped entirely when the user prefers reduced motion.
- * - Saves a sessionStorage flag so returning visitors skip it.
- * - Traps focus and uses aria-modal for a11y.
- */
 export function Opening({ onDone }: { onDone: () => void }) {
   const [phase, setPhase] = useState<"kanji" | "line" | "out">("kanji");
   const [reduced, setReduced] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  // Auto-focus the overlay so keyboard users don't tab behind it
   useEffect(() => {
-    // Small delay so the DOM is ready
+
     const id = setTimeout(() => overlayRef.current?.focus(), 50);
     return () => clearTimeout(id);
   }, []);
 
   useEffect(() => {
-    // 1. Skip if user prefers reduced motion
+
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setReduced(true);
       onDone();
       return;
     }
 
-    // 2. Skip for returning visitors (same session)
     try {
       if (sessionStorage.getItem("lf-opening-seen") === "1") {
         setReduced(true);
         onDone();
         return;
       }
-    } catch { /* sessionStorage may be blocked */ }
+    } catch {  }
 
-    // 3. Play the cinematic sequence
     const t1 = setTimeout(() => setPhase("line"), 700);
     const t2 = setTimeout(() => setPhase("out"), 1500);
     const t3 = setTimeout(() => {
-      try { sessionStorage.setItem("lf-opening-seen", "1"); } catch { /* noop */ }
+      try { sessionStorage.setItem("lf-opening-seen", "1"); } catch {  }
       onDone();
     }, 1850);
     return () => {
@@ -70,7 +60,7 @@ export function Opening({ onDone }: { onDone: () => void }) {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         onKeyDown={(e) => {
           if (e.key === "Escape") {
-            try { sessionStorage.setItem("lf-opening-seen", "1"); } catch { /* noop */ }
+            try { sessionStorage.setItem("lf-opening-seen", "1"); } catch {  }
             onDone();
           }
         }}

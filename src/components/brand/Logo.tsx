@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 
-/** Minimalist Torii-gate logo mark in sora. */
 export function ToriiMark({
   className,
   color = "var(--color-sora)",

@@ -6,7 +6,6 @@ import { viewportOnce } from "@/lib/motion";
 import { ScrollHint } from "@/components/landing/ScrollHint";
 import { SeigaihaWave } from "@/components/landing/SeigaihaWave";
 
-/** A sakura brushstroke that reveals itself when scrolled into view. */
 function RevealStroke() {
   const ref = useRef<HTMLSpanElement>(null);
   const [revealed, setRevealed] = useState(false);
@@ -66,10 +65,6 @@ function AnimatedCounter({ to, suffix = "" }: { to: number; suffix?: string }) {
   );
 }
 
-/**
- * Scene 9 — CERITA KAMI
- * Why LinguaFlow exists. Indonesian story. Warm. Human.
- */
 export function StoryScene() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
@@ -85,7 +80,6 @@ export function StoryScene() {
       >
         <div className="flex w-full max-w-4xl flex-1 flex-col items-center justify-center pb-8 md:pb-10">
           <div className="grid w-full gap-12 md:grid-cols-2 md:gap-16">
-            {/* Left: trigger + journey */}
             <div className="space-y-6">
               <RevealStroke />
               <p className="text-xs font-semibold uppercase tracking-[0.4em] text-sakura">

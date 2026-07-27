@@ -1,17 +1,5 @@
 "use client";
 
-// src/app/a/kelas/page.tsx
-//
-// UPGRADE — perubahan dari versi sebelumnya:
-// 1. Search bar dulu murni dekorasi — sekarang benar-benar menyaring kelas
-//    berdasarkan nama/wali kelas.
-// 2. Modal "Buat Kelas Baru" dulu tombol "Buat Kelas"-nya cuma
-//    `setModal(false)` — form-nya tidak tersambung ke state apa pun, jadi
-//    apa pun yang diisi hilang begitu saja. Sekarang form-nya beneran
-//    tersambung ke state dan kelas baru langsung muncul di grid (belum ke
-//    backend, tapi minimal terasa berfungsi, bukan formulir kosong).
-// 3. Ditambah strip ringkasan (total kelas & total murid) di atas grid.
-
 import { useMemo, useState } from "react";
 import { Plus, Search, Users, BookOpen, ExternalLink } from "lucide-react";
 import { Card } from "@/components/ui/Card";
@@ -47,7 +35,6 @@ export default function KelolaKelas() {
   const [modal, setModal] = useState(false);
   const [query, setQuery] = useState("");
 
-  // Form state untuk modal "Buat Kelas Baru".
   const [newLevel, setNewLevel] = useState("X");
   const [newMajor, setNewMajor] = useState("RPL");
   const [newNumber, setNewNumber] = useState("");
@@ -61,9 +48,6 @@ export default function KelolaKelas() {
 
   const totalStudents = classes.reduce((sum, c) => sum + c.students, 0);
 
-  /** Buat kelas baru dari isian form dan tambahkan ke grid. Belum ke
-   *  backend — cuma state lokal — tapi setidaknya menampilkan hasil nyata,
-   *  bukan modal yang cuma menutup diri tanpa efek apa pun seperti dulu. */
   function submitNewClass() {
     if (!newNumber.trim()) return;
     const name = `${newLevel} ${newMajor} ${newNumber.trim()}`;

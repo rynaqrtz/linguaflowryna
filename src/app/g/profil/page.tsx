@@ -46,9 +46,6 @@ export default function TeacherProfile() {
   const { user, logout } = useUser();
   const name = user?.name ?? "Guru";
 
-  /** Dulu tombol ini cuma router.push("/login") tanpa memanggil logout()
-   *  dulu — sesi (lf_role/lf_email di localStorage) tidak pernah benar-benar
-   *  terhapus. Sekarang logout() dipanggil dulu baru redirect. */
   function handleLogout() {
     logout();
     router.push("/login");
@@ -57,7 +54,6 @@ export default function TeacherProfile() {
   return (
     <AnimatedPage>
       <motion.div variants={staggerContainer} initial="initial" animate="animate">
-        {/* Header */}
         <motion.div variants={staggerItem} className="relative flex flex-col items-center pt-2 text-center">
           <motion.div
             className="relative"
@@ -98,7 +94,6 @@ export default function TeacherProfile() {
           </div>
         </motion.div>
 
-        {/* Stats */}
         <motion.div variants={staggerItem} className="mt-6 grid grid-cols-2 gap-3">
           {stats.map((s) => (
             <motion.div
@@ -115,7 +110,6 @@ export default function TeacherProfile() {
           ))}
         </motion.div>
 
-        {/* Settings */}
         <motion.div variants={staggerItem} className="mt-4 space-y-1">
           {settings.map((s) => {
             const Icon = s.icon;
@@ -161,7 +155,6 @@ export default function TeacherProfile() {
           })}
         </motion.div>
 
-        {/* Logout */}
         <motion.div variants={staggerItem}>
           <Card className="mt-2 transition-all hover:shadow-soft-lg" padded>
             <motion.button

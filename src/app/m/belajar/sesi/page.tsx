@@ -12,12 +12,8 @@ import { useLocalStorage } from "@/lib/use-local-storage";
 import { useProgress, recordStudy, queueReview, markMastered, type SrsItem } from "@/lib/progress";
 import { getWordsByKanji } from "@/lib/vocabulary";
 
-// Dulu 3 kata di sesi ini ditulis ulang lengkap dengan contoh kalimat &
-// kelompok kata kerja — padahal data yang sama persis sudah ada di
-// lib/vocabulary.ts. Sekarang tinggal ambil dari sana lewat kanji-nya.
 const cards = getWordsByKanji(["食べる", "飲む", "行く"]);
 
-/** Simulate card exit direction for animation */
 type ExitDir = "left" | "right" | null;
 
 export default function FlashcardSession() {
@@ -40,7 +36,7 @@ export default function FlashcardSession() {
       setDecisions((d) => ({ ...d, [card.kanji]: knew }));
       setTimeout(() => {
         if (idx + 1 >= total) {
-          // Finalize: update real progress from this session's decisions.
+
           const learned = cards
             .filter((c) => decisions[c.kanji] !== false)
             .map((c) => ({ kanji: c.kanji, xp: 20 }));
@@ -52,7 +48,7 @@ export default function FlashcardSession() {
                 furigana: c.furigana,
                 romaji: c.romaji,
                 arti: c.arti,
-                level: c.level, // dulu hardcode "N5" — sekarang ikut level asli katanya
+                level: c.level,
                 dueDay: new Date(Date.now() + 86_400_000).toISOString().slice(0, 10),
               };
               next = queueReview(next, item);
@@ -73,14 +69,12 @@ export default function FlashcardSession() {
     [card, idx, total, decisions, progress, router, setProgress],
   );
 
-  /** Swipe handler (framer-motion drag) */
   function handleDragEnd(_: unknown, info: PanInfo) {
     if (exiting) return;
     if (info.offset.x > 80) nextCard(true);
     else if (info.offset.x < -80) nextCard(false);
   }
 
-  // Keyboard: arrow keys to rate, space to flip
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (exiting) return;
@@ -98,7 +92,6 @@ export default function FlashcardSession() {
   return (
     <StudentShell title="Sesi Belajar">
       <AnimatedPage>
-        {/* Header — progress */}
         <div className="flex items-center gap-3">
           <Link href="/m/belajar" className="text-sora transition-opacity hover:opacity-70">
             <X size={22} />
@@ -136,7 +129,6 @@ export default function FlashcardSession() {
           </button>
         </div>
 
-        {/* Flashcard with 3D flip + swipe */}
         <div className="mt-4 perspective-[1200px]">
           <AnimatePresence mode="wait">
             <motion.div
@@ -163,7 +155,6 @@ export default function FlashcardSession() {
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               style={{ transformStyle: "preserve-3d" }}
             >
-              {/* 3D Card Inner */}
               <div
                 className="relative h-full w-full"
                 style={{
@@ -172,7 +163,6 @@ export default function FlashcardSession() {
                   transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
                 }}
               >
-                {/* FRONT — Kanji side */}
                 <div
                   className="absolute inset-0 flex flex-col items-center justify-center rounded-card border border-line bg-paper p-6 text-center shadow-soft-lg"
                   style={{ backfaceVisibility: "hidden" }}
@@ -189,7 +179,6 @@ export default function FlashcardSession() {
                   </p>
                 </div>
 
-                {/* BACK — Arti side */}
                 <div
                   className="absolute inset-0 flex flex-col items-center justify-center rounded-card border border-line bg-paper p-6 text-center shadow-soft-lg"
                   style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
@@ -216,7 +205,6 @@ export default function FlashcardSession() {
           </AnimatePresence>
         </div>
 
-        {/* Hint text */}
         <div className="mt-3 flex items-center justify-center gap-4 text-xs text-ink-soft">
           <span className="flex items-center gap-1">
             <ArrowLeft size={14} className="text-error" /> Belum Hafal
@@ -226,7 +214,6 @@ export default function FlashcardSession() {
           </span>
         </div>
 
-        {/* Action buttons */}
         <div className="mt-4 grid grid-cols-2 gap-3">
           <Button
             variant="outline"

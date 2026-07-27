@@ -1,12 +1,5 @@
 "use client";
 
-// src/app/g/layout.tsx
-//
-// Sama seperti src/app/a/layout.tsx — userName/userSub sekarang diambil
-// dari useUser() (sesi login yang sebenarnya), bukan hardcode
-// "Bu Siti Rahma". useRoleGuard("guru") menolak akses kalau yang login
-// bukan guru.
-
 import { AppSidebar, teacherItems } from "@/components/layout/AppSidebar";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { useUser, useRoleGuard } from "@/lib/user-context";

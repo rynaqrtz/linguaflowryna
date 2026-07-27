@@ -27,7 +27,6 @@ const POOL = ["ご飯", "を", "食べます", "が", "私は"];
 const CORRECT_WORDS = ["私は", "ご飯", "を", "食べます"];
 const CORRECT_SENTENCE = CORRECT_WORDS.join(" ");
 
-// ─── Sortable chip for drag-to-reorder ───
 function SortableChip({
   id,
   word,
@@ -67,7 +66,6 @@ function SortableChip({
         <span className="text-[10px] font-bold text-white/50 mr-0.5">{index + 1}</span>
         {word}
       </span>
-      {/* Remove button overlay */}
       <button
         onClick={onRemove}
         className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-paper bg-sakura text-white shadow-soft transition-all hover:bg-rose-600 hover:scale-110"
@@ -79,7 +77,6 @@ function SortableChip({
   );
 }
 
-// ─── Main component ───
 export default function SentenceBuilder() {
   const router = useRouter();
   const [answer, setAnswer] = useState<string[]>([]);
@@ -95,7 +92,6 @@ export default function SentenceBuilder() {
     [answer],
   );
 
-  // ── Word pool ──
   function add(word: string) {
     if (answer.includes(word)) return;
     setAnswer((a) => [...a, word]);
@@ -124,7 +120,6 @@ export default function SentenceBuilder() {
     setShowResult(false);
   }
 
-  // ── Results ──
   const correct = answer.join(" ") === CORRECT_SENTENCE;
   const submitted = showResult && answer.length > 0;
 
@@ -143,9 +138,6 @@ export default function SentenceBuilder() {
   return (
     <StudentShell noHeader>
       <AnimatedPage>
-        {/* ════════════════════════════════════════ */}
-        {/* PREMIUM PROGRESS */}
-        {/* ════════════════════════════════════════ */}
         <div className="flex items-center gap-3">
           <div className="relative flex-1">
             <div className="h-2 rounded-full bg-sora-tint-soft overflow-hidden">
@@ -170,9 +162,6 @@ export default function SentenceBuilder() {
           <span className="text-xs font-bold text-ink-soft">Soal 6 dari 10</span>
         </div>
 
-        {/* ════════════════════════════════════════ */}
-        {/* QUESTION */}
-        {/* ════════════════════════════════════════ */}
         <motion.div
           className="mt-6 rounded-card border border-line bg-paper p-5 text-center shadow-soft"
           initial={{ opacity: 0, y: 12 }}
@@ -190,9 +179,6 @@ export default function SentenceBuilder() {
           <p className="mt-1 text-xs text-ink-soft">Seret kata untuk mengubah urutan</p>
         </motion.div>
 
-        {/* ════════════════════════════════════════ */}
-        {/* ANSWER AREA — premium */}
-        {/* ════════════════════════════════════════ */}
         <motion.div
           className="mt-4 min-h-[120px] rounded-card border-2 border-dashed transition-all duration-300 bg-paper p-4"
           layout
@@ -213,7 +199,6 @@ export default function SentenceBuilder() {
                 : undefined,
           }}
         >
-          {/* Header row */}
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-xs font-medium text-ink-soft">
               {answer.length === 0 ? (
@@ -252,7 +237,6 @@ export default function SentenceBuilder() {
             </div>
           </div>
 
-          {/* Answer chips */}
           {answer.length === 0 ? (
             <motion.div
               className="flex h-16 items-center justify-center"
@@ -290,7 +274,6 @@ export default function SentenceBuilder() {
             </DndContext>
           )}
 
-          {/* Hint */}
           <AnimatePresence>
             {hintShown && !submitted && (
               <motion.div
@@ -316,9 +299,6 @@ export default function SentenceBuilder() {
           </AnimatePresence>
         </motion.div>
 
-        {/* ════════════════════════════════════════ */}
-        {/* WORD POOL — polished */}
-        {/* ════════════════════════════════════════ */}
         <motion.div
           className="mt-4 flex flex-wrap gap-2 justify-center"
           initial={{ opacity: 0 }}
@@ -350,7 +330,6 @@ export default function SentenceBuilder() {
                     }
                   `}
                 >
-                  {/* Index number */}
                   <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-sora/10 text-[8px] font-bold text-sora/30">
                     {i + 1}
                   </span>
@@ -361,9 +340,6 @@ export default function SentenceBuilder() {
           </AnimatePresence>
         </motion.div>
 
-        {/* ════════════════════════════════════════ */}
-        {/* SUBMIT + FEEDBACK */}
-        {/* ════════════════════════════════════════ */}
         <div className="mt-5">
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }}>
             <Button
@@ -385,7 +361,7 @@ export default function SentenceBuilder() {
                 className="mt-4 overflow-hidden space-y-3"
               >
                 {correct ? (
-                  /* ── Correct feedback premium ── */
+
                   <motion.div
                     initial={{ scale: 0.95 }}
                     animate={{ scale: 1 }}
@@ -404,7 +380,7 @@ export default function SentenceBuilder() {
                     <p className="mt-1 text-xs text-ink-soft">Susunan kalimat sempurna!</p>
                   </motion.div>
                 ) : (
-                  /* ── Incorrect feedback premium ── */
+
                   <>
                     <div className="rounded-card bg-gradient-to-br from-error/5 to-rose-50 border border-error/20 px-5 py-4 text-center">
                       <p className="text-base font-bold text-error">Belum tepat</p>
@@ -413,7 +389,6 @@ export default function SentenceBuilder() {
                       </p>
                     </div>
 
-                    {/* Correct positions grid */}
                     <div className="rounded-card border border-line bg-paper p-4">
                       <p className="mb-3 text-xs font-bold tracking-wider uppercase text-ink-soft">
                         Posisi yang benar:

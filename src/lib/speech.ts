@@ -1,6 +1,3 @@
-// Browser-native Japanese TTS — no backend, no recurring cost (per project rules).
-// Uses the Web Speech API (speechSynthesis) which is built into the browser.
-
 let cachedVoices: SpeechSynthesisVoice[] = [];
 
 function loadVoices(): SpeechSynthesisVoice[] {

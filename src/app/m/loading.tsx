@@ -1,9 +1,3 @@
-// src/app/m/loading.tsx
-//
-// Sama seperti src/app/a/loading.tsx, tapi pakai HeroSkeleton supaya
-// bentuknya mendekati kartu sapaan besar yang dipakai halaman-halaman
-// murid (mis. dashboard), bukan grid kartu ala admin/guru.
-
 import { HeroSkeleton, RowSkeleton } from "@/components/ui/Skeleton";
 
 export default function StudentLoading() {

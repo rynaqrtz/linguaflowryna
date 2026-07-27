@@ -36,7 +36,6 @@ export default function SenseiChat() {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [msgs]);
 
-  // Rotate welcome tips
   useEffect(() => {
     if (msgs.length > 1) return;
     const t = setInterval(() => {
@@ -77,11 +76,7 @@ export default function SenseiChat() {
 
   return (
     <StudentShell noHeader>
-      {/* Full-height chat layout — fills the area between shell top padding and bottom-nav reserve */}
       <div className="flex h-[calc(100dvh-5rem)] flex-col overflow-hidden md:mx-auto md:max-w-2xl" style={{ paddingBottom: 0 }}>
-        {/* ════════════════════════════════ */}
-        {/* HEADER */}
-        {/* ════════════════════════════════ */}
         <div className="flex shrink-0 items-center gap-3 border-b border-line/60 bg-warm-white px-4 pb-3 pt-4">
           <motion.span
             className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-sora to-sora-tint text-white shadow-soft"
@@ -104,9 +99,6 @@ export default function SenseiChat() {
           </div>
         </div>
 
-        {/* ════════════════════════════════ */}
-        {/* MESSAGES — scrollable area */}
-        {/* ════════════════════════════════ */}
         <div className="flex-1 overflow-y-auto px-4 py-4 md:px-6">
           <div className="mx-auto w-full max-w-2xl space-y-4">
             <AnimatePresence initial={false}>
@@ -166,7 +158,6 @@ export default function SenseiChat() {
               )}
             </AnimatePresence>
 
-            {/* Welcome suggestion cards — muncul hanya pas blom ada chat */}
             {msgs.length === 1 && !msgs[0].loading && (
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
@@ -197,7 +188,6 @@ export default function SenseiChat() {
                     );
                   })}
                 </div>
-                {/* Rotating tip */}
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={welcomeTipIdx}
@@ -217,9 +207,6 @@ export default function SenseiChat() {
           </div>
         </div>
 
-        {/* ════════════════════════════════ */}
-        {/* INPUT — fixed bottom of the flex column */}
-        {/* ════════════════════════════════ */}
         <div className="shrink-0 border-t border-line/40 bg-paper px-4 pb-3 pt-3 md:px-6">
           <p className="mb-2 text-center text-[10px] text-ink-soft/70">
             Mode Demo — balasan contoh, belum terhubung ke AI.

@@ -11,9 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { AnimatedPage, staggerContainer, staggerItem } from "@/components/ui/AnimatedPage";
 import { useLocalStorage } from "@/lib/use-local-storage";
 import { speakJapanese, isSpeechSupported } from "@/lib/speech";
-// Dulu ada interface "WordLite" sendiri di sini yang bentuknya sama persis
-// dengan Word di lib/vocabulary.ts — sekarang pakai tipe yang sama supaya
-// kalau bentuk data kata berubah, cukup diubah di satu tempat.
+
 import { type Word } from "@/lib/vocabulary";
 
 export default function DeckPage() {
@@ -114,7 +112,6 @@ export default function DeckPage() {
         </motion.div>
       </AnimatedPage>
 
-      {/* Study sheet */}
       <AnimatePresence>
         {studying && (
           <motion.div

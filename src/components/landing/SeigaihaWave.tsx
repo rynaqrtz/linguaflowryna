@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * Seigaiha Wave — decorative Japanese wave divider
- * Renders subtle overlapping wave patterns.
- * Use as decorative element at scene edges.
- */
 export function SeigaihaWave({
   position = "bottom",
   variant = "cream",
@@ -24,9 +19,6 @@ export function SeigaihaWave({
   );
 }
 
-/**
- * Full-width seigaiha banner — for section transitions
- */
 export function SeigaihaBanner({ variant = "cream" }: { variant?: "cream" | "yozora" }) {
   const cls = variant === "yozora" ? "seigaiha-yozora" : "seigaiha";
 

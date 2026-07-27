@@ -50,24 +50,13 @@ export default function Profil() {
   const router = useRouter();
   const { logout } = useUser();
 
-  /** Logout sungguhan — dulu tombol ini cuma `setSheet(null)` (menutup
-   *  sheet doang, sesi tidak pernah benar-benar dihapus, makanya kalau
-   *  ditekan terasa "gak keluar-keluar"). Sekarang benar-benar memanggil
-   *  logout() dari user-context (hapus lf_role/lf_email dari localStorage)
-   *  baru redirect ke /login. */
   function handleLogout() {
     logout();
     router.push("/login");
   }
 
   const [name, setName] = useLocalStorage<string>("lf-name", "Ahmad Fauzi");
-  // BUG FIX: key ini sebelumnya "lf-school" — sama persis dengan key yang
-  // dipakai useSchool() di lib/school.ts (yang menyimpan objek
-  // {tasks, quizzes, submissions}, bukan nama sekolah berupa teks). Dua
-  // fitur berbeda diam-diam berebut satu localStorage key yang sama, jadi
-  // siapapun yang menyimpan lebih dulu bisa membuat data yang satunya
-  // ter-reset ke default tanpa ada error yang kelihatan. Sekarang dipisah
-  // jadi "lf-profile-school".
+
   const [school, setSchool] = useLocalStorage<string>("lf-profile-school", "XII RPL 1 · SMK Texar");
   const [avatarColor, setAvatarColor] = useLocalStorage<string>("lf-avatar-color", "");
   const [language, setLanguage] = useLocalStorage<string>("lf-language", "Indonesia");
@@ -91,7 +80,6 @@ export default function Profil() {
     <StudentShell noHeader>
       <AnimatedPage>
         <motion.div variants={staggerContainer} initial="initial" animate="animate">
-          {/* Profile header */}
           <motion.div variants={staggerItem} className="relative flex flex-col items-center pt-4 text-center">
             <motion.div
               className="relative"
@@ -126,7 +114,6 @@ export default function Profil() {
             </motion.p>
           </motion.div>
 
-          {/* Stats grid with stagger */}
           <motion.div variants={staggerItem} className="mt-6 grid grid-cols-2 gap-3">
             {[
               { v: progress.xp.toLocaleString(), l: "Total XP", icon: Star },
@@ -148,7 +135,6 @@ export default function Profil() {
             ))}
           </motion.div>
 
-          {/* Activity chart with animated bars */}
           <motion.div variants={staggerItem}>
             <Card className="mt-4 transition-all hover:shadow-soft-lg" padded>
               <div className="flex items-center justify-between">
@@ -175,7 +161,6 @@ export default function Profil() {
             </Card>
           </motion.div>
 
-          {/* Role switcher (dev) */}
           <motion.div variants={staggerItem} className="mt-4">
             <p className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-soft">
               Mode Tampilan
@@ -183,7 +168,6 @@ export default function Profil() {
             <RoleSwitcher current="murid" />
           </motion.div>
 
-          {/* Settings */}
           <motion.div variants={staggerItem} className="mt-4 space-y-1">
             {[
               { icon: Pencil, label: "Edit Profil", desc: "Nama, foto, kelas", kind: "profile" as const },
@@ -236,7 +220,6 @@ export default function Profil() {
             })}
           </motion.div>
 
-          {/* Logout */}
           <motion.div variants={staggerItem}>
             <Card className="mt-2 transition-all hover:shadow-soft-lg" padded>
               <motion.button
@@ -251,16 +234,11 @@ export default function Profil() {
         </motion.div>
       </AnimatedPage>
 
-      {/* ─── Sheets ─── */}
       <BottomSheet open={sheet === "profile"} onClose={() => setSheet(null)} title="Edit Profil">
         <div className="space-y-4 pb-2">
           <div className="flex flex-col items-center">
             <Avatar name={draftName || "Ahmad Fauzi"} size={72} color={avatarColor || undefined} />
             <p className="mt-2 text-[11px] text-ink-soft">Warna avatar (demo)</p>
-            {/* Dulu: ["#2b3a67", "#c8373a", "#e8b04b", "#10b981", "#5a6fa8"]
-                (indigo lama, vermillion, gold, success, indigo-tint-2 lama).
-                Sekarang disamakan dengan token warna baru: sora, sakura,
-                gold-app, success, sora-tint-2. */}
             <div className="mt-1 flex gap-2">
               {["#3d7dae", "#c24d77", "#e3ac4c", "#10b981", "#7fadd1"].map((c) => (
                 <button

@@ -1,22 +1,5 @@
 "use client";
 
-// src/app/register-sekolah/RegisterSekolahClient.tsx
-//
-// Logika halaman "Daftarkan Sekolah" dipindah ke sini dari page.tsx supaya
-// page.tsx bisa jadi Server Component dan mengekspor `metadata`.
-//
-// Perubahan dari versi sebelumnya:
-// 1. Field NPSN dulu tidak tersambung ke state sama sekali (`<Input
-//    placeholder="12345678" />` tanpa `value`/`onChange`) — apa pun yang
-//    diketik user di situ langsung hilang, tidak pernah tersimpan. Sekarang
-//    NPSN ikut disimpan di state dan divalidasi (kalau diisi, harus angka).
-// 2. Step 2 dulu cuma mengecek field tidak kosong (`!name || !email`),
-//    bukan format email yang benar. Sekarang email divalidasi formatnya.
-// 3. Tombol "Daftar" di step 2 dulu langsung pindah ke step 3 tanpa jeda —
-//    sekarang ada status "Mendaftarkan…" dulu (simulasi memanggil backend),
-//    supaya kalau nanti diganti pemanggilan Supabase asli, pola loading-nya
-//    sudah siap.
-
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, Building2, Mail, User, Check } from "lucide-react";
@@ -25,17 +8,14 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card } from "@/components/ui/Card";
 
-/** Cek format email sederhana (bukan pengecekan ke database, cuma format). */
 function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
-/** NPSN itu opsional, tapi kalau diisi harus berupa angka (biasanya 8 digit). */
 function isValidNpsn(value: string): boolean {
   return value.trim() === "" || /^\d+$/.test(value.trim());
 }
 
-/** Step indicator 1-2-3 yang dipakai di atas kartu form. */
 function StepIndicator({ step }: { step: 1 | 2 | 3 }) {
   return (
     <div className="mb-8 flex items-center justify-center gap-2 text-xs font-semibold">
@@ -59,12 +39,10 @@ function StepIndicator({ step }: { step: 1 | 2 | 3 }) {
 export default function RegisterSekolahClient() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
-  // --- Step 1: profil sekolah ---
   const [school, setSchool] = useState("");
   const [npsn, setNpsn] = useState("");
   const [step1Touched, setStep1Touched] = useState(false);
 
-  // --- Step 2: akun admin ---
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [step2Touched, setStep2Touched] = useState(false);
@@ -78,17 +56,12 @@ export default function RegisterSekolahClient() {
   const emailValid = isValidEmail(email);
   const step2Valid = nameValid && emailValid;
 
-  /** Pindah dari step 1 ke step 2, setelah memastikan nama sekolah &
-   *  NPSN (kalau diisi) sudah valid. */
   function goToStep2() {
     setStep1Touched(true);
     if (!step1Valid) return;
     setStep(2);
   }
 
-  /** "Daftar" — validasi akun admin, lalu simulasi kirim ke backend.
-   *  Begitu Supabase siap, ganti isi `setTimeout` ini dengan pemanggilan
-   *  Supabase Auth (signUp) + insert baris ke tabel `schools`. */
   function submitRegistration() {
     setStep2Touched(true);
     if (!step2Valid) return;

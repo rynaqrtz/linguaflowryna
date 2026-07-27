@@ -78,7 +78,6 @@ export default function Leaderboard() {
             <span className="ml-2 rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-bold text-gold">DEMO</span>
           </motion.div>
 
-          {/* Filter tabs */}
           <motion.div variants={staggerItem} className="mt-4 flex gap-2" role="tablist" aria-label="Filter peringkat">
             {([
               { id: "kelas", label: "Kelas", icon: Medal },
@@ -105,7 +104,6 @@ export default function Leaderboard() {
             })}
           </motion.div>
 
-          {/* Podium with staggered entrance */}
           <motion.div variants={staggerItem} className="mt-8 flex items-end justify-center gap-3">
             {rankings[filter].top3.map((entry, i) => (
               <motion.div
@@ -115,7 +113,6 @@ export default function Leaderboard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.25 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
               >
-                {/* Crown for #1 */}
                 {entry.rank === 1 && (
                   <motion.span
                     className="mb-1 flex h-7 w-7 items-center justify-center rounded-full bg-gold text-white shadow-soft"
@@ -126,7 +123,6 @@ export default function Leaderboard() {
                     <Crown size={16} fill="currentColor" />
                   </motion.span>
                 )}
-                {/* Medal for #2, #3 */}
                 {(entry.rank === 2 || entry.rank === 3) && (
                   <span className="mb-1 flex h-6 w-6 items-center justify-center rounded-full bg-sora-tint-soft text-[11px] font-bold text-sora">
                     #{entry.rank}
@@ -150,7 +146,6 @@ export default function Leaderboard() {
             ))}
           </motion.div>
 
-          {/* My rank highlighted card */}
           <motion.div variants={staggerItem}>
             <Card className="mt-6 bg-sora-tint-soft border-2 border-sora/20 transition-all hover:shadow-soft-lg" padded>
               <div className="flex items-center gap-3">
@@ -167,7 +162,6 @@ export default function Leaderboard() {
             </Card>
           </motion.div>
 
-          {/* Rest of rankings */}
           <motion.div variants={staggerItem} className="mt-4 space-y-2">
             {rankings[filter].rest.map((r, i) => (
               <motion.div

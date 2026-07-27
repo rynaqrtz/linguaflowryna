@@ -12,10 +12,7 @@ import { AnimatedPage, staggerContainer, staggerItem } from "@/components/ui/Ani
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { useLocalStorage } from "@/lib/use-local-storage";
 import { speakJapanese, isSpeechSupported } from "@/lib/speech";
-// Dulu file ini punya array kata sendiri (8 kata), padahal 4 file lain
-// (deck, kuis/soal, belajar/sesi, g/kuis) masing-masing punya array
-// terpisah juga — beberapa kata sama persis ditulis ulang di banyak
-// tempat. Sekarang semua ambil dari satu sumber di lib/vocabulary.ts.
+
 import { vocabulary as words, type Word } from "@/lib/vocabulary";
 
 type SortKey = "furigana" | "arti";
@@ -78,7 +75,6 @@ export default function KamusList() {
     return acc;
   }, {});
 
-  // Lock body scroll when bottom sheet is open, preventing layout shift
   useEffect(() => {
     if (selected) {
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -98,12 +94,8 @@ export default function KamusList() {
     <StudentShell noHeader>
       <AnimatedPage>
         <h1 className="text-2xl font-bold text-ink">Kamus</h1>
-        {/* Dulu teks ini hardcode "3.200+ kosakata" padahal isinya cuma 8
-            kata — dibaca dari panjang array asli sekarang biar tidak
-            pernah lagi beda dari kenyataan. */}
         <p className="text-xs text-ink-soft">{words.length} kosakata N5</p>
 
-        {/* Search */}
         <div className="relative mt-4">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft" />
           <Input
@@ -238,7 +230,6 @@ export default function KamusList() {
         )}
       </AnimatedPage>
 
-      {/* Bottom sheet — spring animation */}
       <AnimatePresence>
         {selected && (
           <motion.div
@@ -248,7 +239,6 @@ export default function KamusList() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            {/* Backdrop */}
             <motion.div
               className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
               initial={{ opacity: 0 }}
@@ -257,7 +247,6 @@ export default function KamusList() {
               onClick={() => setSelected(null)}
             />
 
-            {/* Sheet */}
             <motion.div
               className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-card bg-paper pb-8 shadow-soft-lg"
               initial={{ y: "100%" }}
@@ -321,11 +310,9 @@ export default function KamusList() {
                   {selected.level}
                 </Badge>
 
-                {/* Arti */}
                 <h3 className="mt-5 text-sm font-bold text-ink">Arti</h3>
                 <p className="text-sm text-ink-soft">{selected.arti} (kata kerja)</p>
 
-                {/* Contoh Kalimat */}
                 <h3 className="mt-4 text-sm font-bold text-ink">Contoh Kalimat</h3>
                 <div className="mt-2 space-y-2">
                   <button
@@ -340,7 +327,6 @@ export default function KamusList() {
                   </button>
                 </div>
 
-                {/* Kata Terkait */}
                 <h3 className="mt-4 text-sm font-bold text-ink">Kata Terkait</h3>
                 <div className="no-scrollbar mt-2 flex gap-2 overflow-x-auto">
                   {["食べ物", "飲む", "ご飯"].map((r) => (
@@ -371,7 +357,6 @@ export default function KamusList() {
         )}
       </AnimatePresence>
 
-      {/* Deck confirmation toast */}
       <AnimatePresence>
         {deckToast && (
           <motion.div

@@ -30,7 +30,6 @@ export default function ClassDetail({ params }: { params: { id: string } }) {
   const info = meta[params.id] ?? { name: "XII RPL 1", total: 28, avg: 72 };
   return (
     <>
-      {/* Breadcrumb */}
       <div className="flex items-center gap-1 text-sm text-ink-soft">
         <Link href="/g/kelas" className="hover:text-sora">
           Kelas Saya
@@ -54,7 +53,6 @@ export default function ClassDetail({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      {/* Search + sort */}
       <div className="mt-5 flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft" />
@@ -67,7 +65,6 @@ export default function ClassDetail({ params }: { params: { id: string } }) {
         </Select>
       </div>
 
-      {/* Desktop / tablet table */}
       <Card className="mt-4 hidden overflow-hidden p-0 md:block" padded={false}>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] text-sm">
@@ -122,7 +119,6 @@ export default function ClassDetail({ params }: { params: { id: string } }) {
         </div>
       </Card>
 
-      {/* Mobile student cards */}
       <div className="mt-4 space-y-3 md:hidden">
         {students.map((s) => (
           <Card

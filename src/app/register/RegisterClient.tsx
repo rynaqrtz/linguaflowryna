@@ -1,22 +1,5 @@
 "use client";
 
-// src/app/register/RegisterClient.tsx
-//
-// Logika halaman "Gabung ke Kelas" dipindah ke sini dari page.tsx supaya
-// page.tsx bisa jadi Server Component dan mengekspor `metadata`.
-//
-// Perubahan dari versi sebelumnya:
-// 1. Dulu cuma Step 1 (kode kelas) yang benar-benar berfungsi. Step 2 dan 3
-//    sudah ada di step-indicator (bulatan "1-2-3" di atas) tapi tidak pernah
-//    bisa dicapai — tombol "Lanjut" tidak punya onClick sama sekali. Sekarang
-//    ketiga step berfungsi: kode kelas -> buat akun -> selesai.
-// 2. Tombol "Lanjut" di step 1 sekarang benar-benar memvalidasi kode (dan
-//    menampilkan pesan error kalau salah), bukan cuma menyalakan tanda
-//    centang tanpa aksi lanjutan.
-// 3. Step 2 (buat akun) sekarang memvalidasi nama, email, dan panjang
-//    password minimal sebelum tombol aktif — pola yang sama dengan
-//    src/app/login/LoginClient.tsx supaya konsisten di seluruh app.
-
 import { useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { ChevronLeft, School, Check, User, Mail, Lock } from "lucide-react";
@@ -25,16 +8,13 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
 const CODE_LENGTH = 6;
-// Kode kelas "benar" untuk simulasi — belum ada backend yang benar-benar
-// mencocokkan kode ke tabel kelas di database.
+
 const VALID_CLASS_CODE = "SMK2026";
 
-/** Cek format email sederhana (bukan pengecekan ke database, cuma format). */
 function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
-/** Step indicator 1-2-3 yang dipakai di atas kartu form. */
 function StepIndicator({ step }: { step: 1 | 2 | 3 }) {
   return (
     <div className="mb-8 flex items-center justify-center gap-2 text-xs font-semibold">
@@ -58,13 +38,11 @@ function StepIndicator({ step }: { step: 1 | 2 | 3 }) {
 export default function RegisterClient() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
-  // --- Step 1: kode kelas ---
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(""));
   const [checkingCode, setCheckingCode] = useState(false);
   const [codeError, setCodeError] = useState(false);
   const digitRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  // --- Step 2: buat akun ---
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -74,25 +52,20 @@ export default function RegisterClient() {
   const code = digits.join("");
   const codeComplete = code.length === CODE_LENGTH;
 
-  /** Update satu kotak kode kelas, lalu pindah fokus ke kotak berikutnya. */
   function setDigit(index: number, value: string) {
     const next = [...digits];
     next[index] = value.slice(-1).toUpperCase();
     setDigits(next);
-    setCodeError(false); // hapus pesan error begitu user mengetik ulang
+    setCodeError(false);
     if (value && index < CODE_LENGTH - 1) digitRefs.current[index + 1]?.focus();
   }
 
-  /** Backspace di kotak kosong -> pindah fokus ke kotak sebelumnya. */
   function onDigitKeyDown(index: number, e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Backspace" && !digits[index] && index > 0) {
       digitRefs.current[index - 1]?.focus();
     }
   }
 
-  /** Validasi kode kelas. Ada jeda singkat supaya terasa seperti benar-benar
-   *  mengecek ke server — begitu backend siap, ganti isi fungsi ini dengan
-   *  pemanggilan API yang sesungguhnya (mis. lib/api/tasks.ts). */
   function submitCode() {
     if (!codeComplete) return;
     setCheckingCode(true);
@@ -111,8 +84,6 @@ export default function RegisterClient() {
   const passwordValid = password.length >= 8;
   const accountValid = nameValid && emailValid && passwordValid;
 
-  /** Validasi & "kirim" form buat akun. Belum ada backend — di sini cuma
-   *  simulasi delay lalu lanjut ke step sukses. */
   function submitAccount() {
     setAccountTouched(true);
     if (!accountValid) return;

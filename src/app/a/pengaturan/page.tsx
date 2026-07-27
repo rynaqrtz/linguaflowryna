@@ -20,9 +20,6 @@ export default function PengaturanSekolah() {
   const router = useRouter();
   const { logout } = useUser();
 
-  /** Dulu halaman ini SAMA SEKALI tidak punya cara untuk logout (beda
-   *  dengan halaman profil murid & guru yang sudah ada tombol "Keluar") —
-   *  admin yang masuk lewat halaman ini tidak bisa keluar dari sesinya. */
   function handleLogout() {
     logout();
     router.push("/login");
@@ -44,7 +41,6 @@ export default function PengaturanSekolah() {
       <h1 className="text-2xl font-bold text-ink jp-rule">Pengaturan Sekolah</h1>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-2">
-        {/* Profil sekolah */}
         <Card padded>
           <div className="flex items-center gap-2">
             <Building2 size={18} className="text-sora" />
@@ -66,7 +62,6 @@ export default function PengaturanSekolah() {
           </div>
         </Card>
 
-        {/* Notifikasi */}
         <Card padded>
           <div className="flex items-center gap-2">
             <Bell size={18} className="text-sora" />
@@ -89,20 +84,11 @@ export default function PengaturanSekolah() {
           </div>
         </Card>
 
-        {/* Tampilan */}
         <Card padded>
           <div className="flex items-center gap-2">
             <Palette size={18} className="text-sora" />
             <h2 className="text-base font-bold text-ink">Tampilan</h2>
           </div>
-          {/* Dulu di sini ada 3 pilihan tema statis ("Indigo (Ai-iro)",
-              "Vermillion", "Hijau Matcha") yang cuma teks — tidak bisa
-              diklik, dan nama-namanya juga sisa dari palet warna lama
-              sebelum di-redesign. App ini cuma benar-benar punya SATU
-              sistem warna (skema "Hanami") dengan mode terang/gelap, jadi
-              diganti jadi toggle mode gelap yang sungguhan berfungsi —
-              sebelumnya admin juga satu-satunya role yang tidak punya cara
-              untuk ganti mode gelap sama sekali. */}
           <div className="mt-4 flex items-center justify-between rounded-btn bg-sora-tint-soft/30 px-3 py-2.5">
             <div className="flex items-center gap-2">
               <Moon size={16} className="text-sora" />
@@ -115,7 +101,6 @@ export default function PengaturanSekolah() {
           </div>
         </Card>
 
-        {/* Bahasa */}
         <Card padded>
           <div className="flex items-center gap-2">
             <Globe size={18} className="text-sora" />
@@ -143,7 +128,6 @@ export default function PengaturanSekolah() {
       </div>
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-        {/* Dulu tidak ada tombol logout sama sekali di halaman ini. */}
         <button
           onClick={handleLogout}
           className="flex items-center gap-2 text-sm font-bold text-sakura hover:underline"

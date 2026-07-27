@@ -5,7 +5,6 @@ import { useState } from "react";
 import { useSchool, pendingSubmissions } from "@/lib/school";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 
-/** Notification bell for the teacher — surfaces new student submissions. */
 export function TeacherBell() {
   const [school] = useSchool();
   const [open, setOpen] = useState(false);

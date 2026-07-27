@@ -1,8 +1,3 @@
-// src/app/g/loading.tsx
-//
-// Sama seperti src/app/a/loading.tsx — lihat komentar di sana untuk
-// penjelasan lengkap kenapa file ini ditambahkan.
-
 import { CardSkeleton, RowSkeleton } from "@/components/ui/Skeleton";
 
 export default function TeacherLoading() {

@@ -1,20 +1,5 @@
 "use client";
 
-// src/app/a/murid/page.tsx
-//
-// UPGRADE — perubahan dari versi sebelumnya:
-// 1. Search bar & tombol "Semua Kelas" dulu murni dekorasi (tidak ada
-//    state/onChange sama sekali) — ketik apa pun tidak menyaring apa-apa.
-//    Sekarang keduanya benar-benar menyaring daftar murid.
-// 2. Tombol "Edit" & "Nonaktifkan" dulu tidak punya onClick sama sekali.
-//    "Nonaktifkan" sekarang benar-benar toggle status murid (di state lokal
-//    — belum ke backend, tapi setidaknya memberi umpan balik nyata, bukan
-//    tombol mati).
-// 3. Tidak ada tampilan kalau hasil pencarian kosong — ditambahkan empty
-//    state supaya jelas itu "tidak ada hasil", bukan halaman rusak.
-// 4. Ditambah strip ringkasan kecil di atas (total & aktif) — dulu langsung
-//    ke tabel tanpa ada angka ringkasan sama sekali.
-
 import { useMemo, useState } from "react";
 import { Search, Plus, Upload, Pencil, UserX, UserCheck } from "lucide-react";
 import { Card } from "@/components/ui/Card";
@@ -48,7 +33,6 @@ export default function KelolaMurid() {
   const [query, setQuery] = useState("");
   const [classFilter, setClassFilter] = useState("Semua Kelas");
 
-  // Menyaring berdasarkan nama/NIS DAN kelas sekaligus.
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return students.filter((s) => {
@@ -60,9 +44,6 @@ export default function KelolaMurid() {
 
   const activeCount = students.filter((s) => s.status === "Aktif").length;
 
-  /** Toggle status Aktif/Nonaktif satu murid berdasarkan NIS-nya. Belum
-   *  memanggil backend — sekarang cuma mengubah state lokal supaya tombol
-   *  ini terasa benar-benar berfungsi, bukan dekorasi. */
   function toggleStatus(nis: string) {
     setStudents((prev) =>
       prev.map((s) => (s.nis === nis ? { ...s, status: s.status === "Aktif" ? "Nonaktif" : "Aktif" } : s)),
@@ -83,8 +64,6 @@ export default function KelolaMurid() {
         </div>
       </div>
 
-      {/* Ringkasan singkat — dulu tidak ada angka ringkasan sama sekali,
-          langsung lompat ke tabel mentah. */}
       <div className="mt-4 flex gap-6 text-sm">
         <p>
           <span className="font-bold text-ink">{students.length}</span>{" "}
@@ -121,7 +100,6 @@ export default function KelolaMurid() {
         </Card>
       ) : (
         <>
-          {/* Mobile: card list */}
           <div className="mt-4 space-y-3 md:hidden">
             {filtered.map((s) => (
               <Card key={s.nis} padded>
@@ -164,7 +142,6 @@ export default function KelolaMurid() {
             ))}
           </div>
 
-          {/* Desktop: table */}
           <Card className="mt-4 hidden overflow-hidden p-0 md:block" padded={false}>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[680px] text-sm">
@@ -217,7 +194,6 @@ export default function KelolaMurid() {
         </>
       )}
 
-      {/* Import modal */}
       {modal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-ink/40" onClick={() => setModal(false)} />

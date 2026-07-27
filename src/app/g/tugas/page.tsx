@@ -49,12 +49,10 @@ export default function AssignTaskWizard() {
     router.push("/g/dashboard");
   }
 
-
   return (
     <>
       <h1 className="text-2xl font-bold tracking-tight text-ink jp-rule">Assign Tugas</h1>
 
-      {/* Step indicator */}
       <div className="mt-5 flex items-center">
         {steps.map((s, i) => (
           <div key={s} className="flex flex-1 items-center">
@@ -83,7 +81,6 @@ export default function AssignTaskWizard() {
       </div>
 
       <Card className="mt-6" padded>
-        {/* Step 1 — type + class */}
         {step === 1 && (
           <div>
             <h2 className="text-lg font-bold tracking-tight text-ink">Jenis & Kelas</h2>
@@ -142,7 +139,6 @@ export default function AssignTaskWizard() {
           </div>
         )}
 
-        {/* Step 2 — material */}
         {step === 2 && (
           <div>
             <h2 className="text-lg font-bold tracking-tight text-ink">Pilih Materi Tugas</h2>
@@ -172,7 +168,6 @@ export default function AssignTaskWizard() {
           </div>
         )}
 
-        {/* Step 3 — target */}
         {step === 3 && (
           <div>
             <h2 className="text-lg font-bold tracking-tight text-ink">Target & Durasi</h2>
@@ -202,7 +197,6 @@ export default function AssignTaskWizard() {
           </div>
         )}
 
-        {/* Step 4 — deadline */}
         {step === 4 && (
           <div>
             <h2 className="text-lg font-bold tracking-tight text-ink">Tenggat Waktu</h2>
@@ -219,7 +213,6 @@ export default function AssignTaskWizard() {
           </div>
         )}
 
-        {/* Step 5 — preview */}
         {step === 5 && (
           <div>
             <h2 className="text-lg font-bold tracking-tight text-ink">Preview & Konfirmasi</h2>
@@ -234,7 +227,6 @@ export default function AssignTaskWizard() {
         )}
       </Card>
 
-      {/* Footer */}
       <div className="sticky bottom-0 z-10 mt-6 flex gap-3 border-t border-line bg-warm-white pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-4 md:pb-4">
         <Button variant="outline" onClick={() => setStep((s) => Math.max(1, s - 1))} disabled={step === 1}>
           Kembali

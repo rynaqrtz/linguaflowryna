@@ -1,19 +1,5 @@
 "use client";
 
-// src/app/login/LoginClient.tsx
-//
-// Logika login dipindah ke sini (dari page.tsx) supaya page.tsx bisa jadi
-// Server Component dan mengekspor `metadata` (judul tab browser + deskripsi
-// untuk share link) — Next.js tidak mengizinkan Client Component ("use
-// client") mengekspor `metadata`.
-//
-// Perubahan dari versi sebelumnya:
-// 1. Validasi email/NIS beneran (dulu tombol "Masuk" aktif walau isinya
-//    ngasal, mis. cuma spasi atau teks acak).
-// 2. Pakai useUser().login() dari lib/user-context.tsx, bukan
-//    localStorage.setItem() manual — supaya nama yang login langsung
-//    kebaca di seluruh app (dashboard admin/guru/murid).
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -23,8 +9,6 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useUser, type UserRole } from "@/lib/user-context";
 
-/** Menebak role dari kata kunci di email — masih simulasi (belum ada
- *  backend yang benar-benar menyimpan role per akun). */
 function detectRole(email: string): UserRole {
   const e = email.toLowerCase();
   if (e.includes("admin") || e.includes("kepala") || e.includes("waka")) return "admin";
@@ -32,9 +16,6 @@ function detectRole(email: string): UserRole {
   return "murid";
 }
 
-/** Terima email biasa ATAU NIS (Nomor Induk Siswa, angka 4+ digit).
- *  Ini validasi format saja, bukan pengecekan ke database — belum ada
- *  backend untuk memastikan akunnya benar-benar ada. */
 function isValidLoginInput(value: string): boolean {
   const trimmed = value.trim();
   if (!trimmed) return false;
@@ -56,8 +37,7 @@ export default function LoginClient() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // Error cuma ditampilkan setelah user pernah mencoba submit, supaya
-  // field kosong di awal tidak langsung menampilkan pesan merah.
+
   const [touched, setTouched] = useState(false);
 
   const inputValid = isValidLoginInput(email);
@@ -77,9 +57,7 @@ export default function LoginClient() {
     setTouched(true);
     if (!inputValid) return;
     setLoading(true);
-    // Demo auth — belum ada backend sungguhan. login() menyimpan role+email
-    // ke localStorage DAN memperbarui UserContext sekaligus, jadi tidak
-    // perlu localStorage.setItem() manual lagi di sini.
+
     const role = detectRole(email);
     login(email, role);
     setTimeout(() => goToDashboard(role), 700);
@@ -176,7 +154,6 @@ export default function LoginClient() {
           </Link>
         </form>
 
-        {/* Demo accounts */}
         <div className="mt-5 rounded-card border border-dashed border-sora/40 bg-sora-tint-soft/30 p-4">
           <p className="text-xs font-bold text-sora">Akun Demo (klik untuk masuk cepat)</p>
           <div className="mt-2 grid grid-cols-3 gap-2">

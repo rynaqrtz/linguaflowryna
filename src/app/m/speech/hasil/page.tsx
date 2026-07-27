@@ -28,7 +28,6 @@ export default function SpeechResult() {
     <StudentShell noHeader>
       <AnimatedPage>
         <motion.div variants={staggerContainer} initial="initial" animate="animate">
-          {/* Score hero */}
           <motion.div variants={staggerItem} className="flex flex-col items-center pt-4 text-center">
             <motion.div
               initial={{ scale: 0.6, opacity: 0, rotate: -10 }}
@@ -50,7 +49,6 @@ export default function SpeechResult() {
             <span className="mt-1 inline-block rounded-full bg-gold/15 px-2.5 py-0.5 text-[10px] font-bold text-[#9a6b16]">MODE DEMO — SKOR CONTOH</span>
           </motion.div>
 
-          {/* Subscores with animated bars */}
           <div className="mt-5 space-y-4">
             {subscores.map((s, i) => (
               <motion.div
@@ -85,7 +83,6 @@ export default function SpeechResult() {
             ))}
           </div>
 
-          {/* Detailed analysis */}
           <motion.div
             variants={staggerItem}
             className="mt-5 grid gap-3"
@@ -117,7 +114,6 @@ export default function SpeechResult() {
             </Card>
           </motion.div>
 
-          {/* Actions */}
           <motion.div variants={staggerItem} className="mt-6 grid grid-cols-2 gap-3">
             <motion.div whileTap={{ scale: 0.97 }}>
               <Button variant="outline" size="lg" onClick={() => router.push("/m/speech")}>

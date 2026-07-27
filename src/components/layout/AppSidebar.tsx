@@ -60,9 +60,6 @@ export function AppSidebar({
                   : "text-ink-soft hover:bg-sora-tint-soft/50 hover:text-sora",
               )}
             >
-              {/* Garis aksen kiri untuk item aktif — dulu tidak ada,
-                  jadi status aktif cuma terlihat dari warna teks/latar
-                  yang tipis bedanya. */}
               {active && (
                 <span className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-full bg-sakura" aria-hidden="true" />
               )}
@@ -74,10 +71,6 @@ export function AppSidebar({
       </nav>
       <div className="border-t border-line p-3">
         <RoleSwitcher current={role === "admin" ? "admin" : "guru"} />
-        {/* Dulu badge user di sini cuma ikon UserCircle generik yang sama
-            untuk semua orang. Sekarang pakai komponen Avatar yang sudah
-            dipakai di seluruh app (inisial + warna konsisten per nama),
-            supaya sidebar terasa personal, bukan placeholder. */}
         <div className="mt-3 flex items-center gap-3 rounded-btn px-2 py-2">
           <Avatar name={userName} size={36} />
           <div className="min-w-0">
@@ -91,7 +84,6 @@ export function AppSidebar({
 
   return (
     <>
-      {/* Mobile top bar with hamburger */}
       <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-line bg-paper/80 px-4 backdrop-blur-md md:hidden">
         <Logo size={24} />
         <button onClick={() => setOpen(true)} aria-label="Buka menu">
@@ -99,12 +91,10 @@ export function AppSidebar({
         </button>
       </div>
 
-      {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 border-r border-line bg-paper md:block">
         {sidebar}
       </aside>
 
-      {/* Mobile drawer */}
       {open && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-ink/40" onClick={() => setOpen(false)} />

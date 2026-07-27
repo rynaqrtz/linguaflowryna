@@ -31,10 +31,6 @@ export default function LaporanSekolah() {
           <p className="text-sm text-ink-soft">SMK Texar · Semester Ganjil 2026</p>
         </div>
         <div className="flex gap-2">
-          {/* Dulu kedua tombol ini tidak punya onClick sama sekali. Belum
-              ada backend untuk generate file sungguhan, jadi untuk
-              sekarang cukup kasih tahu jelas statusnya (konsisten dengan
-              pola "belum tersambung backend" di tempat lain di app ini). */}
           <Button variant="outline" size="sm" onClick={() => alert("Export PDF belum tersambung ke backend.")}>
             <Download size={15} /> Export PDF
           </Button>
@@ -45,10 +41,6 @@ export default function LaporanSekolah() {
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {/* Dulu ke-4 kartu ini identik semua. "Perlu Perhatian" adalah
-            metrik yang paling butuh tindakan admin, jadi dibedakan dengan
-            aksen sakura supaya langsung menonjol — pola yang sama dengan
-            kartu "Total Murid" di a/dashboard. */}
         {[
           { k: "Rata-rata Skor", v: "78", highlight: false },
           { k: "Penyelesaian Tugas", v: "85%", highlight: false },
@@ -85,7 +77,6 @@ export default function LaporanSekolah() {
         </div>
       </Card>
 
-      {/* Mobile: card list */}
       <div className="mt-4 space-y-3 md:hidden">
         {students.map((s) => (
           <Card key={s.name} padded>
@@ -102,7 +93,6 @@ export default function LaporanSekolah() {
         ))}
       </div>
 
-      {/* Desktop: table */}
       <Card className="mt-4 hidden overflow-hidden p-0 md:block" padded={false}>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[520px] text-sm">

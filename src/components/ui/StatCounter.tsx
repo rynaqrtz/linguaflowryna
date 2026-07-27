@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 
-/** Counts up to `to` when scrolled into view. */
 export function StatCounter({
   to,
   suffix = "",
@@ -30,7 +29,7 @@ export function StatCounter({
           const start = performance.now();
           const tick = (now: number) => {
             const p = Math.min(1, (now - start) / duration);
-            // easeOutCubic
+
             const eased = 1 - Math.pow(1 - p, 3);
             setVal(Math.round(eased * to));
             if (p < 1) requestAnimationFrame(tick);

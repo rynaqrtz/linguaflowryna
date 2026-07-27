@@ -29,7 +29,6 @@ import { AnimatedPage, staggerContainer, staggerItem } from "@/components/ui/Ani
 
 type Tab = "guru" | "harian";
 
-// ─── Clean stat card — icon only, no colored backgrounds ───
 function StatCard({ icon: Icon, value, label, iconColor }: {
   icon: React.ElementType;
   value: string;
@@ -49,7 +48,6 @@ function StatCard({ icon: Icon, value, label, iconColor }: {
   );
 }
 
-// ─── Empty state ───
 function EmptyState({ icon: Icon, title, desc }: { icon: React.ElementType; title: string; desc: string }) {
   return (
     <motion.div variants={staggerItem} className="mt-12 flex flex-col items-center text-center">
@@ -62,7 +60,6 @@ function EmptyState({ icon: Icon, title, desc }: { icon: React.ElementType; titl
   );
 }
 
-// ─── Deadline bar ───
 function DeadlineBar({ deadline, pct = 60 }: { deadline: string; pct?: number }) {
   return (
     <div className="mt-2.5 space-y-1.5">
@@ -84,7 +81,6 @@ function DeadlineBar({ deadline, pct = 60 }: { deadline: string; pct?: number })
   );
 }
 
-// ─── Horizontal challenge card ───
 function ChallengeCard({ icon: Icon, title, desc, iconColor, gradient }: {
   icon: React.ElementType;
   title: string;
@@ -115,7 +111,6 @@ function ChallengeCard({ icon: Icon, title, desc, iconColor, gradient }: {
   );
 }
 
-// ─── Main page ───
 export default function KuisList() {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("guru");
@@ -125,18 +120,13 @@ export default function KuisList() {
     <StudentShell noHeader>
       <AnimatedPage>
         <motion.div variants={staggerContainer} initial="initial" animate="animate">
-          {/* ════════════════════════════════════════ */}
-          {/* PREMIUM PAGE HEADER */}
-          {/* ════════════════════════════════════════ */}
           <motion.div variants={staggerItem}>
             <div className="relative overflow-hidden rounded-card bg-gradient-to-br from-sora via-sora-tint to-sora-tint-2 px-5 py-6 text-white shadow-soft-lg">
-              {/* Decorative elements */}
               <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full border-[12px] border-white/5" />
               <div className="absolute -bottom-10 -left-10 h-28 w-28 rounded-full bg-white/[0.03]" />
               <div className="seigaiha absolute inset-0 opacity-[0.06]" />
 
               <div className="relative">
-                {/* Top row */}
                 <div className="flex items-center gap-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15">
                     <Sword size={22} className="text-white" />
@@ -147,7 +137,6 @@ export default function KuisList() {
                   </div>
                 </div>
 
-                {/* Mini motivational text */}
                 <div className="mt-3 flex items-center gap-2 rounded-btn bg-white/10 px-3 py-2">
                   <Sparkles size={14} className="text-gold shrink-0" />
                   <p className="text-xs text-white/80">Kuis hari ini: N5 Random · 10 soal</p>
@@ -156,18 +145,12 @@ export default function KuisList() {
             </div>
           </motion.div>
 
-          {/* ════════════════════════════════════════ */}
-          {/* STATS — 3 premium cards */}
-          {/* ════════════════════════════════════════ */}
           <div className="mt-4 grid grid-cols-3 gap-2.5">
             <StatCard icon={BookOpen} value="85" label="Rata-rata skor" iconColor="text-sora" />
             <StatCard icon={Flame} value="7" label="Hari streak" iconColor="text-gold" />
             <StatCard icon={Medal} value="12" label="Kuis selesai" iconColor="text-success" />
           </div>
 
-          {/* ════════════════════════════════════════ */}
-          {/* PILL TABS — redesigned */}
-          {/* ════════════════════════════════════════ */}
           <motion.div
             variants={staggerItem}
             className="mt-5 flex gap-2 rounded-xl bg-sora-tint-soft/60 p-1"
@@ -205,9 +188,6 @@ export default function KuisList() {
             </button>
           </motion.div>
 
-          {/* ════════════════════════════════════════ */}
-          {/* TAB CONTENT */}
-          {/* ════════════════════════════════════════ */}
           <AnimatePresence mode="wait">
             <motion.div
               variants={staggerItem}
@@ -217,12 +197,10 @@ export default function KuisList() {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             >
-              {/* ───────── TUGAS GURU ───────── */}
               {tab === "guru" && (
                 <>
                   {hasTasks ? (
                     <div className="mt-4 space-y-5">
-                      {/* Section: Urgent */}
                       <section>
                         <div className="mb-3 flex items-center gap-2">
                           <span className="flex h-5 w-1 rounded-full bg-sakura" />
@@ -264,7 +242,6 @@ export default function KuisList() {
                         </div>
                       </section>
 
-                      {/* Section: Completed / other tasks */}
                       <section>
                         <div className="mb-3 flex items-center gap-2">
                           <span className="flex h-5 w-1 rounded-full bg-ink-soft/30" />
@@ -325,16 +302,13 @@ export default function KuisList() {
                 </>
               )}
 
-              {/* ───────── KUIS HARIAN ───────── */}
               {tab === "harian" && (
                 <div className="mt-4 space-y-3.5">
-                  {/* Daily Quiz — hero card premium */}
                   <motion.div
                     variants={staggerItem}
                     whileHover={{ y: -2 }}
                     className="relative overflow-hidden rounded-card bg-gradient-to-br from-sora via-sora-tint to-[#4a5f9e] p-5 shadow-soft-lg transition-all hover:shadow-soft-lg active:scale-[0.98]"
                   >
-                    {/* Decorative rings */}
                     <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full border-[16px] border-white/5" />
                     <div className="pointer-events-none absolute -bottom-8 -left-8 h-24 w-24 rounded-full border-[8px] border-white/[0.03]" />
                     <div className="seigaiha-yozora absolute inset-0 opacity-[0.08]" />
@@ -383,7 +357,6 @@ export default function KuisList() {
                     gradient="bg-gradient-to-r from-success/15 to-emerald-400/15"
                   />
 
-                  {/* Motivational footer */}
                   <motion.div
                     variants={staggerItem}
                     className="mt-2 flex items-center justify-center gap-2 rounded-card bg-sora-tint-soft/50 px-4 py-3 text-center"

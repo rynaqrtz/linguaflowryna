@@ -11,13 +11,12 @@ interface BottomSheetProps {
   children: ReactNode;
 }
 
-/** Reusable bottom sheet — spring animation, matches the Kamus sheet style. */
 export function BottomSheet({ open, onClose, title, children }: BottomSheetProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (open) {
-      // Small timeout to let the animation start before focusing
+
       const timer = setTimeout(() => containerRef.current?.focus(), 100);
       return () => clearTimeout(timer);
     }
@@ -33,7 +32,6 @@ export function BottomSheet({ open, onClose, title, children }: BottomSheetProps
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          {/* Backdrop */}
           <motion.div
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             initial={{ opacity: 0 }}
@@ -42,7 +40,6 @@ export function BottomSheet({ open, onClose, title, children }: BottomSheetProps
             onClick={onClose}
           />
 
-          {/* Sheet */}
           <motion.div
             ref={containerRef}
             tabIndex={-1}

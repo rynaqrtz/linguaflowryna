@@ -5,10 +5,9 @@ import { usePathname } from "next/navigation";
 import { adminItems, type SidebarItem } from "@/components/layout/AppSidebar";
 import { cn } from "@/lib/utils";
 
-/** Mobile-only bottom tab bar for the admin app — native-app feel, 4 primary tabs. */
 export function AdminMobileBottomNav() {
   const path = usePathname();
-  // Primary destinations shown as tabs: Dashboard, Guru, Murid, Kelas.
+
   const tabs: SidebarItem[] = adminItems.slice(0, 4);
 
   return (

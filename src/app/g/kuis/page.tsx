@@ -30,10 +30,7 @@ import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { useRouter } from "next/navigation";
 import { useSchool, type SchoolQuiz } from "@/lib/school";
-// Dulu ada 6 kata hardcode di sini (dan sebagian sama persis dengan yang
-// ada di kamus/deck/kuis murid) — sekarang bank kata soal diambil dari
-// satu sumber yang sama, lib/vocabulary.ts. `kanji` dipakai sebagai id unik
-// untuk dnd-kit karena setiap kanji di daftar ini memang berbeda-beda.
+
 import { vocabulary as bank, type Word } from "@/lib/vocabulary";
 
 function SortableWord({ w, index, onRemove }: { w: Word; index: number; onRemove: (kanji: string) => void }) {
@@ -102,15 +99,14 @@ export default function QuizCreator() {
       w.arti.toLowerCase().includes(q.toLowerCase()),
   );
 
-  // Tambah kata dari bank ke daftar soal terpilih (kalau belum ada).
   function add(w: Word) {
     if (!selected.find((s) => s.kanji === w.kanji)) setSelected((s) => [...s, w]);
   }
-  // Hapus kata dari daftar soal terpilih berdasarkan kanji-nya.
+
   function remove(kanji: string) {
     setSelected((s) => s.filter((x) => x.kanji !== kanji));
   }
-  // Urutan ulang soal terpilih saat guru drag-and-drop.
+
   function handleDragEnd(e: DragEndEvent) {
     const { active, over } = e;
     if (over && active.id !== over.id) {
@@ -153,7 +149,6 @@ export default function QuizCreator() {
         </div>
       </div>
 
-      {/* Basic info */}
       <Card className="mt-5" padded>
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="sm:col-span-2">
@@ -175,9 +170,7 @@ export default function QuizCreator() {
         </div>
       </Card>
 
-      {/* Two columns */}
       <div className="mt-5 grid gap-4 lg:grid-cols-5">
-        {/* Bank */}
         <Card className="lg:col-span-2" padded>
           <div className="relative">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft" />
@@ -206,7 +199,6 @@ export default function QuizCreator() {
           </div>
         </Card>
 
-        {/* Selected */}
         <Card className="lg:col-span-3" padded>
           <div className="flex items-center justify-between">
             <p className="text-sm font-bold text-ink">Soal Terpilih</p>

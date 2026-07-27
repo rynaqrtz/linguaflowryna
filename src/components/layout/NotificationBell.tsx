@@ -21,7 +21,6 @@ const notifications = [
   },
 ];
 
-/** Bell button + working notification sheet (mock data). Replaces dead inline bells. */
 export function NotificationBell({
   size = 20,
   color = "text-sora",

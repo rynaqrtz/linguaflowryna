@@ -1,13 +1,5 @@
 "use client";
 
-// src/app/LandingClient.tsx
-//
-// Isi halaman landing (dulu ada langsung di page.tsx) dipindah ke sini
-// supaya page.tsx bisa jadi Server Component dan mengekspor `metadata`
-// (title tab browser + Open Graph untuk preview link kalau dibagikan ke
-// medsos/WhatsApp) — lihat src/app/page.tsx dan src/app/login/page.tsx
-// untuk penjelasan pola yang sama.
-
 import { useState } from "react";
 
 import { SmoothScroll } from "@/components/landing/SmoothScroll";
@@ -26,8 +18,8 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingNav } from "@/components/landing/LandingNav";
 import { SeigaihaBanner } from "@/components/landing/SeigaihaWave";
 import { SceneBridge } from "@/components/landing/SceneBridge";
+import { JourneyProgress } from "@/components/landing/JourneyProgress";
 
-// Komponen utama landing page — dipanggil dari src/app/page.tsx.
 export default function LandingClient() {
   const [opened, setOpened] = useState(false);
 
@@ -35,22 +27,20 @@ export default function LandingClient() {
     <SmoothScroll>
       {!opened && <Opening onDone={() => setOpened(true)} />}
       <LandingNav />
+      <JourneyProgress />
       <main id="main-content" className="relative">
         <Hero />
         <ProductReveal />
         <AppJourney />
         <AISenseiDemo />
         <SpeechScene />
-        {/* Smooth transition yozora → cream ke FlashcardScene */}
         <SceneBridge from="yozora" to="cream" />
         <FlashcardScene />
         <SeigaihaBanner />
         <LeaderboardScene />
         <StoryScene />
-        {/* Transition: cream → yozora untuk TeamScene */}
         <SceneBridge from="cream" to="yozora" />
         <TeamScene />
-        {/* Transition: yozora → cream untuk EndingScene */}
         <SceneBridge from="yozora" to="cream" />
         <EndingScene />
         <SeigaihaBanner />

@@ -42,7 +42,6 @@ function StudentProgressModal() {
           <X size={22} />
         </button>
 
-        {/* Header */}
         <div className="flex items-center gap-4">
           <Avatar name={name} size={56} />
           <div>
@@ -51,7 +50,6 @@ function StudentProgressModal() {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="mt-4 grid grid-cols-3 gap-2 text-center">
           <div className="rounded-btn bg-sora-tint-soft p-2">
             <p className="flex items-center justify-center gap-1 text-sm font-bold text-sora">
@@ -73,7 +71,6 @@ function StudentProgressModal() {
           <ProgressBar value={78} color="sora" height={10} />
         </div>
 
-        {/* Tabs */}
         <div className="mt-5 flex gap-1 overflow-x-auto rounded-btn bg-sora-tint-soft/50 p-1">
           {([
             { id: "ringkasan", label: "Ringkasan" },

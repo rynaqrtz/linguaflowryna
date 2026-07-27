@@ -1,10 +1,3 @@
-// Client-side school data store (no backend).
-// Single source of truth that links the teacher app and the student app so the
-// demo feels real: when a teacher assigns a task / publishes a quiz here, the
-// student sees it, and submissions the student "turns in" show up for the teacher.
-//
-// Persists to localStorage with realistic seed values so reloads stay consistent.
-
 import { useLocalStorage } from "@/lib/use-local-storage";
 import { dayKey } from "@/lib/progress";
 
@@ -14,14 +7,14 @@ export interface SchoolTask {
   id: string;
   title: string;
   type: TaskType;
-  classId: string; // matches g/kelas/[id] slug
+  classId: string;
   className: string;
-  level: string; // N5 / N4 / N3
+  level: string;
   category: string;
-  target: number; // jumlah soal
-  duration: number; // menit
-  deadline: string; // YYYY-MM-DD
-  createdAt: string; // YYYY-MM-DD
+  target: number;
+  duration: number;
+  deadline: string;
+  createdAt: string;
   teacher: string;
 }
 
@@ -45,9 +38,9 @@ export interface Submission {
   studentNis: string;
   classId: string;
   type: TaskType;
-  score: number | null; // null = belum dinilai
+  score: number | null;
   turnedInAt: string;
-  note?: string; // feedback dari guru
+  note?: string;
 }
 
 export interface SchoolState {
@@ -141,7 +134,6 @@ export function useSchool() {
   return useLocalStorage<SchoolState>("lf-school", SEED);
 }
 
-/** Tasks still open (deadline >= today) assigned to a class. */
 export function openTasksForClass(state: SchoolState, classId: string): SchoolTask[] {
   const today = dayKey();
   return state.tasks
@@ -149,12 +141,10 @@ export function openTasksForClass(state: SchoolState, classId: string): SchoolTa
     .sort((a, b) => a.deadline.localeCompare(b.deadline));
 }
 
-/** Submissions not yet graded for a class. */
 export function pendingSubmissions(state: SchoolState, classId: string): Submission[] {
   return state.submissions.filter((s) => s.classId === classId && s.score === null);
 }
 
-/** All submissions for a class. */
 export function submissionsForClass(state: SchoolState, classId: string): Submission[] {
   return state.submissions.filter((s) => s.classId === classId);
 }

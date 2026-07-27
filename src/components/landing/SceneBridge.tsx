@@ -1,12 +1,3 @@
-/**
- * SceneBridge — smooth gradient transition between scenes of contrasting colors.
- * Place between scenes where the background color changes significantly
- * (e.g. cream → yozora or yozora → cream).
- *
- * Usage:
- *   <SceneBridge from="cream" to="yozora" />
- *   <SceneBridge from="yozora" to="cream" />
- */
 export function SceneBridge({
   from = "cream",
   to = "yozora",

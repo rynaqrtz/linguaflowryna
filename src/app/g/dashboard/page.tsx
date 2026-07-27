@@ -71,8 +71,7 @@ export default function TeacherDashboard() {
   const router = useRouter();
   const timeGreeting = useTimeGreeting();
   const { user } = useUser();
-  // Dulu hardcode "Bu Siti" — sekarang dari sesi login sungguhan, dengan
-  // fallback generik kalau sesi belum termuat.
+
   const teacherName = user?.name ?? "Guru";
   const today = new Date().toLocaleDateString("id-ID", {
     weekday: "long",
@@ -83,7 +82,6 @@ export default function TeacherDashboard() {
 
   return (
     <>
-      {/* Header */}
       <div className="relative overflow-hidden rounded-card">
         <div className="sakura-petals pointer-events-none absolute inset-0 opacity-40" aria-hidden="true" />
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -103,7 +101,6 @@ export default function TeacherDashboard() {
         </div>
       </div>
 
-      {/* Ikhtisar */}
       <p className="mb-3 mt-8 text-xs font-semibold uppercase tracking-[0.18em] text-ink-soft">
         Ikhtisar
       </p>
@@ -131,9 +128,7 @@ export default function TeacherDashboard() {
         })}
       </div>
 
-      {/* Main grid */}
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Classes */}
         <div className="lg:col-span-2">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-bold tracking-tight text-ink">Kelas Saya</h2>
@@ -167,9 +162,7 @@ export default function TeacherDashboard() {
           </div>
         </div>
 
-        {/* Right column */}
         <div className="flex flex-col gap-6">
-          {/* Review queue */}
           <div>
             <h2 className="mb-3 text-lg font-bold tracking-tight text-ink">Tugas Perlu Direview</h2>
             <div className="flex flex-col gap-3">
@@ -194,7 +187,6 @@ export default function TeacherDashboard() {
             </div>
           </div>
 
-          {/* Activity */}
           <Card padded>
             <div className="flex items-center justify-between">
               <p className="text-sm font-bold text-ink">Aktivitas Kelas</p>

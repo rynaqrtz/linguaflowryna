@@ -3,7 +3,6 @@
 import { useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/** Card that tilts toward the cursor on hover (subtle 3D). */
 export function TiltCard({
   children,
   className,

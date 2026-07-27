@@ -18,7 +18,6 @@ export default function SpeechPractice() {
   const intervalRef = useRef<number | null>(null);
   const autoRedirectRef = useRef<number | null>(null);
 
-  // Timer for recording duration
   useEffect(() => {
     if (recording) {
       intervalRef.current = window.setInterval(() => {
@@ -36,7 +35,7 @@ export default function SpeechPractice() {
 
   const toggleRecording = useCallback(() => {
     if (recording) {
-      // Stop recording + clear auto-redirect
+
       if (autoRedirectRef.current) {
         clearTimeout(autoRedirectRef.current);
         autoRedirectRef.current = null;
@@ -45,7 +44,7 @@ export default function SpeechPractice() {
     } else {
       setRecording(true);
       setTimer(0);
-      // Auto-redirect after 5 seconds
+
       autoRedirectRef.current = window.setTimeout(() => {
         setRecording(false);
         router.push("/m/speech/hasil");
@@ -67,7 +66,6 @@ export default function SpeechPractice() {
           <p className="text-sm text-ink-soft">Kalimat 3 dari 10</p>
         </motion.div>
 
-        {/* Sentence card */}
         <motion.div
           initial={{ opacity: 0, y: 16, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -94,7 +92,6 @@ export default function SpeechPractice() {
           </Card>
         </motion.div>
 
-        {/* Waveform — animates when recording */}
         <div className="mt-8 flex h-20 items-center justify-center gap-[3px]">
           {Array.from({ length: 32 }).map((_, i) => {
             const amplitude = recording
@@ -131,7 +128,6 @@ export default function SpeechPractice() {
           })}
         </div>
 
-        {/* Timer display */}
         <AnimatePresence>
           {recording && (
             <motion.p
@@ -145,7 +141,6 @@ export default function SpeechPractice() {
           )}
         </AnimatePresence>
 
-        {/* Record button */}
         <div className="mt-8 flex justify-center">
           <motion.button
             onClick={toggleRecording}
@@ -197,7 +192,6 @@ export default function SpeechPractice() {
           </motion.button>
         </div>
 
-        {/* Status text */}
         <motion.p
           className="mt-4 text-center text-xs text-ink-soft"
           animate={recording ? { opacity: [0.5, 1, 0.5] } : { opacity: 1 }}
@@ -210,7 +204,6 @@ export default function SpeechPractice() {
           {recording ? "Merekam — tap untuk stop" : "Tap mikrofon untuk mulai"}
         </motion.p>
 
-        {/* Result button */}
         <AnimatePresence>
           {!recording && timer > 0 && (
             <motion.div

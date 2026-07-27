@@ -11,7 +11,7 @@ const fills: Record<Color, string> = {
 };
 
 interface ProgressBarProps {
-  value: number; // 0-100
+  value: number;
   color?: Color;
   className?: string;
   trackClass?: string;
@@ -44,7 +44,7 @@ export function ProgressBar({
 }
 
 interface RingProgressProps {
-  value: number; // 0-100
+  value: number;
   size?: number;
   stroke?: number;
   color?: Color;

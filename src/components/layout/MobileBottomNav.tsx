@@ -5,10 +5,9 @@ import { usePathname } from "next/navigation";
 import { teacherItems, type SidebarItem } from "@/components/layout/AppSidebar";
 import { cn } from "@/lib/utils";
 
-/** Mobile-only bottom tab bar — gives the teacher app a native-app feel. */
 export function MobileBottomNav() {
   const path = usePathname();
-  // Show the 4 primary destinations as tabs; keep links data-driven.
+
   const tabs: SidebarItem[] = teacherItems.slice(0, 4);
 
   return (

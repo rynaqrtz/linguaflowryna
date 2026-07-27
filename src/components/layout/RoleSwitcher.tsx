@@ -7,10 +7,6 @@ import { useUser, type UserRole } from "@/lib/user-context";
 
 type Role = UserRole;
 
-// Email demo dipakai supaya "pindah role" lewat tombol ini tetap konsisten
-// dengan alur login sungguhan (lihat src/app/login/LoginClient.tsx) —
-// tanpa ini, useRoleGuard di layout admin/guru/murid akan langsung
-// melempar balik ke /login karena localStorage masih menyimpan role lama.
 const roles: {
   role: Role;
   label: string;
@@ -28,11 +24,6 @@ export function RoleSwitcher({ current }: { current: Role }) {
   const router = useRouter();
   const { login } = useUser();
 
-  // "Pindah role" di sini diperlakukan sama seperti login ulang sebagai
-  // akun demo role tersebut, supaya konsisten dengan proteksi useRoleGuard
-  // di src/app/{a,g,m}/layout.tsx. Ini tetap alat bantu demo/QA saja — di
-  // aplikasi produksi nanti, widget ini sebaiknya dilepas/disembunyikan
-  // karena membiarkan siapapun "menjadi" role lain tanpa password.
   function switchTo(target: (typeof roles)[number]) {
     login(target.demoEmail, target.role);
     router.push(target.href);

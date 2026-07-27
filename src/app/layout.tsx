@@ -10,7 +10,6 @@ export const metadata: Metadata = {
     "Platform belajar Bahasa Jepang interaktif untuk murid SMK Indonesia. AI Sensei, flashcard, kuis, dan tracking progress real-time.",
 };
 
-/** Inline script to set dark class before hydration — prevents flash */
 const themeScript = `
 (function(){try{var t=localStorage.getItem('lf-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.classList.add('dark')}catch(e){}})()
 `;
@@ -27,9 +26,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full bg-warm-white text-ink transition-colors duration-300">
-        {/* beforeInteractive: script ini WAJIB jalan sebelum React hydrate,
-            supaya kelas "dark" sudah terpasang duluan dan tidak ada kedipan
-            tema terang sesaat sebelum tema gelap muncul. */}
         <Script
           id="theme-init"
           strategy="beforeInteractive"
@@ -41,9 +37,6 @@ export default function RootLayout({
         >
           Langsung ke konten utama
         </a>
-        {/* UserProvider membungkus seluruh app supaya semua halaman
-            (login, admin, guru, murid) berbagi satu sumber data "siapa yang
-            login" — lihat src/lib/user-context.tsx */}
         <ThemeProvider>
           <UserProvider>{children}</UserProvider>
         </ThemeProvider>
