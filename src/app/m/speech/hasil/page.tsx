@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { RotateCcw, ArrowRight, Sparkles } from "lucide-react";
@@ -8,21 +9,61 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { RingProgress } from "@/components/ui/ProgressBar";
 import { AnimatedPage, staggerContainer, staggerItem } from "@/components/ui/AnimatedPage";
+import type { PronunciationScore } from "@/lib/speech";
 
-const subscores = [
-  { label: "Kejelasan", value: 90, color: "sora" as const },
-  { label: "Intonasi", value: 78, color: "gold" as const },
-  { label: "Kelancaran", value: 88, color: "success" as const },
-];
-
-const words = [
-  { w: "私は", tone: "success" },
-  { w: "学生", tone: "success" },
-  { w: "です", tone: "gold" },
-];
+function verdictFor(overall: number): string {
+  if (overall >= 85) return "Bagus!";
+  if (overall >= 65) return "Lumayan!";
+  return "Coba Lagi";
+}
 
 export default function SpeechResult() {
   const router = useRouter();
+  const [score, setScore] = useState<PronunciationScore | null>(null);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    const raw = sessionStorage.getItem("lf-speech-result");
+    if (!raw) {
+      setNotFound(true);
+      return;
+    }
+    try {
+      setScore(JSON.parse(raw) as PronunciationScore);
+    } catch {
+      setNotFound(true);
+    }
+  }, []);
+
+  if (notFound) {
+    return (
+      <StudentShell noHeader>
+        <AnimatedPage>
+          <div className="flex flex-col items-center pt-16 text-center">
+            <p className="text-sm text-ink-soft">Belum ada hasil latihan ucapan.</p>
+            <Button className="mt-4" onClick={() => router.push("/m/speech")}>
+              Mulai Latihan
+            </Button>
+          </div>
+        </AnimatedPage>
+      </StudentShell>
+    );
+  }
+
+  if (!score) {
+    return (
+      <StudentShell noHeader>
+        <AnimatedPage>
+          <div className="pt-16 text-center text-sm text-ink-soft">Memuat hasil…</div>
+        </AnimatedPage>
+      </StudentShell>
+    );
+  }
+
+  const subscores = [
+    { label: "Akurasi Kata", value: score.accuracy, color: "sora" as const },
+    { label: "Kepercayaan Pengenalan", value: score.confidence, color: "gold" as const },
+  ];
 
   return (
     <StudentShell noHeader>
@@ -34,8 +75,8 @@ export default function SpeechResult() {
               animate={{ scale: 1, opacity: 1, rotate: 0 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             >
-              <RingProgress value={85} size={130} color="success">
-                <span className="text-4xl font-bold text-sora">85</span>
+              <RingProgress value={score.overall} size={130} color="success">
+                <span className="text-4xl font-bold text-sora">{score.overall}</span>
               </RingProgress>
             </motion.div>
             <motion.h1
@@ -44,9 +85,11 @@ export default function SpeechResult() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
             >
-              Bagus! <Sparkles size={28} className="inline text-gold ml-1" />
+              {verdictFor(score.overall)} <Sparkles size={28} className="inline text-gold ml-1" />
             </motion.h1>
-            <span className="mt-1 inline-block rounded-full bg-gold/15 px-2.5 py-0.5 text-[10px] font-bold text-[#9a6b16]">MODE DEMO — SKOR CONTOH</span>
+            <span className="mt-1 inline-block rounded-full bg-sora-tint-soft px-2.5 py-0.5 text-[10px] font-bold text-sora">
+              Dari pengenalan suara browser
+            </span>
           </motion.div>
 
           <div className="mt-5 space-y-4">
@@ -70,10 +113,7 @@ export default function SpeechResult() {
                 </div>
                 <div className="h-2.5 w-full rounded-full bg-sora-tint-soft overflow-hidden">
                   <motion.div
-                    className={
-                      "h-2.5 rounded-full " +
-                      (s.color === "sora" ? "bg-sora" : s.color === "gold" ? "bg-gold" : "bg-success")
-                    }
+                    className={"h-2.5 rounded-full " + (s.color === "sora" ? "bg-sora" : "bg-gold")}
                     initial={{ width: "0%" }}
                     animate={{ width: `${s.value}%` }}
                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.35 + i * 0.1 }}
@@ -83,33 +123,19 @@ export default function SpeechResult() {
             ))}
           </div>
 
-          <motion.div
-            variants={staggerItem}
-            className="mt-5 grid gap-3"
-          >
+          <motion.div variants={staggerItem} className="mt-5 grid gap-3">
             <Card className="text-center transition-all hover:shadow-soft-lg" padded>
-              <p className="jp text-2xl text-sora">
-                {words.map((x) => (
-                  <span
-                    key={x.w}
-                    className={
-                      "mx-0.5 transition-colors " +
-                      (x.tone === "success"
-                        ? "text-success"
-                        : "text-gold underline decoration-dotted underline-offset-4")
-                    }
-                  >
-                    {x.w}
-                  </span>
-                ))}{" "}
-                です
+              <p className="mb-1 text-xs text-ink-soft">Yang browser dengar dari kamu:</p>
+              <p lang="ja" className="jp text-2xl text-sora">
+                {score.transcript || "(tidak terdengar)"}
               </p>
             </Card>
 
             <Card className="border-l-4 border-l-sora transition-all hover:shadow-soft-lg" padded>
               <p className="text-sm text-ink">
-                Pengucapan <span className="jp font-semibold">です</span> di akhir kalimat perlu lebih jelas,
-                coba ulangi dengan penekanan di &ldquo;su&rdquo;.
+                Skor ini dihitung dari kecocokan teks yang dikenali browser dengan kalimat target, ditambah
+                tingkat kepercayaan pengenalan suara. Ini belum menilai intonasi/prosodi secara mendalam —
+                untuk itu perlu layanan penilaian pelafalan khusus.
               </p>
             </Card>
           </motion.div>

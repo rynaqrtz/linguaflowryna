@@ -18,7 +18,6 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { StudentShell } from "@/components/layout/StudentShell";
-import { RoleSwitcher } from "@/components/layout/RoleSwitcher";
 import { Card } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
@@ -159,13 +158,6 @@ export default function Profil() {
                 ))}
               </div>
             </Card>
-          </motion.div>
-
-          <motion.div variants={staggerItem} className="mt-4">
-            <p className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-soft">
-              Mode Tampilan
-            </p>
-            <RoleSwitcher current="murid" />
           </motion.div>
 
           <motion.div variants={staggerItem} className="mt-4 space-y-1">

@@ -6,6 +6,7 @@ import { ChevronLeft, School, Check, User, Mail, Lock } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useUser } from "@/lib/user-context";
 
 const CODE_LENGTH = 6;
 
@@ -48,6 +49,8 @@ export default function RegisterClient() {
   const [password, setPassword] = useState("");
   const [accountTouched, setAccountTouched] = useState(false);
   const [creatingAccount, setCreatingAccount] = useState(false);
+  const [accountError, setAccountError] = useState("");
+  const { signUp } = useUser();
 
   const code = digits.join("");
   const codeComplete = code.length === CODE_LENGTH;
@@ -84,14 +87,23 @@ export default function RegisterClient() {
   const passwordValid = password.length >= 8;
   const accountValid = nameValid && emailValid && passwordValid;
 
-  function submitAccount() {
+  async function submitAccount() {
     setAccountTouched(true);
+    setAccountError("");
     if (!accountValid) return;
     setCreatingAccount(true);
-    setTimeout(() => {
-      setCreatingAccount(false);
-      setStep(3);
-    }, 700);
+    const result = await signUp({
+      email,
+      password,
+      fullName,
+      role: "murid",
+    });
+    setCreatingAccount(false);
+    if (result.error) {
+      setAccountError(result.error);
+      return;
+    }
+    setStep(3);
   }
 
   return (
@@ -208,6 +220,9 @@ export default function RegisterClient() {
               <p className="mt-2 text-xs font-medium text-sakura">
                 Isi nama (min. 2 huruf), email yang valid, dan password minimal 8 karakter.
               </p>
+            )}
+            {accountError && (
+              <p className="mt-2 rounded-btn bg-error/10 px-3 py-2 text-xs font-medium text-error">{accountError}</p>
             )}
 
             <div className="mt-6 flex gap-3">

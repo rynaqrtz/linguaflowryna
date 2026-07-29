@@ -9,26 +9,15 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useUser, type UserRole } from "@/lib/user-context";
 
-function detectRole(email: string): UserRole {
-  const e = email.toLowerCase();
-  if (e.includes("admin") || e.includes("kepala") || e.includes("waka")) return "admin";
-  if (e.includes("guru") || e.includes("bu") || e.includes("pak") || e.includes("sensei")) return "guru";
-  return "murid";
-}
+const ROLE_HOME: Record<UserRole, string> = {
+  murid: "/m/dashboard",
+  guru: "/g/dashboard",
+  admin: "/a/dashboard",
+};
 
-function isValidLoginInput(value: string): boolean {
-  const trimmed = value.trim();
-  if (!trimmed) return false;
-  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
-  const isNis = /^\d{4,}$/.test(trimmed);
-  return isEmail || isNis;
+function isValidEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
-
-const demos: { label: string; email: string; role: UserRole }[] = [
-  { label: "Murid", email: "ahmad.fauzi@siswa.smk.id", role: "murid" },
-  { label: "Guru", email: "siti.rahma@guru.smk.id", role: "guru" },
-  { label: "Admin", email: "admin@smktexar.sch.id", role: "admin" },
-];
 
 export default function LoginClient() {
   const router = useRouter();
@@ -37,37 +26,32 @@ export default function LoginClient() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [touched, setTouched] = useState(false);
+  const [serverError, setServerError] = useState("");
 
-  const inputValid = isValidLoginInput(email);
+  const inputValid = isValidEmail(email);
   const showError = touched && !inputValid;
 
-  function goToDashboard(role: UserRole) {
-    const map: Record<UserRole, string> = {
-      murid: "/m/dashboard",
-      guru: "/g/dashboard",
-      admin: "/a/dashboard",
-    };
-    router.push(map[role]);
-  }
-
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     setTouched(true);
-    if (!inputValid) return;
+    setServerError("");
+    if (!inputValid || !password) return;
     setLoading(true);
 
-    const role = detectRole(email);
-    login(email, role);
-    setTimeout(() => goToDashboard(role), 700);
-  }
+    const result = await login(email, password);
+    setLoading(false);
 
-  function quick(role: UserRole, mail: string) {
-    setEmail(mail);
-    setPassword("demo1234");
-    login(mail, role);
-    goToDashboard(role);
+    if (result.error) {
+      setServerError(
+        result.error.toLowerCase().includes("invalid")
+          ? "Email atau password salah."
+          : result.error,
+      );
+      return;
+    }
+
+    router.push(result.role ? ROLE_HOME[result.role] : "/m/dashboard");
   }
 
   return (
@@ -84,13 +68,13 @@ export default function LoginClient() {
 
         <form onSubmit={submit} noValidate className="rounded-card border border-line bg-paper p-6 shadow-soft">
           <label htmlFor="login-email" className="mb-1.5 block text-sm font-semibold text-ink">
-            Email atau NIS
+            Email
           </label>
           <div className="relative">
             <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft" />
             <Input
               id="login-email"
-              type="text"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onBlur={() => setTouched(true)}
@@ -102,7 +86,7 @@ export default function LoginClient() {
           </div>
           {showError && (
             <p id="login-email-error" className="mt-1.5 text-xs font-medium text-sakura">
-              Masukkan email yang valid (mis. nama@sekolah.id) atau NIS berupa angka.
+              Masukkan email yang valid (mis. nama@sekolah.id).
             </p>
           )}
 
@@ -126,6 +110,10 @@ export default function LoginClient() {
               placeholder="••••••••"
             />
           </div>
+
+          {serverError && (
+            <p className="mt-3 rounded-btn bg-error/10 px-3 py-2 text-xs font-medium text-error">{serverError}</p>
+          )}
 
           <Button type="submit" fullWidth className="mt-5" disabled={loading}>
             {loading ? (
@@ -153,24 +141,6 @@ export default function LoginClient() {
             </Button>
           </Link>
         </form>
-
-        <div className="mt-5 rounded-card border border-dashed border-sora/40 bg-sora-tint-soft/30 p-4">
-          <p className="text-xs font-bold text-sora">Akun Demo (klik untuk masuk cepat)</p>
-          <div className="mt-2 grid grid-cols-3 gap-2">
-            {demos.map((d) => (
-              <button
-                key={d.role}
-                onClick={() => quick(d.role, d.email)}
-                className="rounded-btn border border-sora bg-paper px-2 py-2 text-xs font-semibold text-sora transition-colors hover:bg-sora-tint-soft"
-              >
-                {d.label}
-              </button>
-            ))}
-          </div>
-          <p className="mt-2 text-[10px] text-ink-soft">
-            Role otomatis dari email. Backend masih simulasi.
-          </p>
-        </div>
 
         <p className="mt-6 text-center text-xs text-ink-soft">© 2026 LinguaFlow School</p>
       </div>

@@ -47,18 +47,39 @@ export default function SenseiChat() {
   function send(text: string) {
     const t = text.trim();
     if (!t) return;
+    const history = msgs
+      .filter((m) => !m.loading)
+      .map((m) => ({ role: m.who, text: m.text }));
     setMsgs((m) => [...m, { who: "me", text: t }, { who: "ai", text: "", loading: true }]);
     setInput("");
-    setTimeout(() => {
-      setMsgs((m) => {
-        const copy = [...m];
-        copy[copy.length - 1] = {
-          who: "ai",
-          text: "Partikel を (wo) menandakan objek yang menerima tindakan. Contoh: ご飯を食べる (Gohan wo taberu) = makan nasi. を selalu mengikuti kata benda yang dikenai aksi kata kerja.",
-        };
-        return copy;
+
+    fetch("/api/sensei", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: t, history }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? "Gagal menghubungi AI Sensei.");
+        return data.reply as string;
+      })
+      .then((reply) => {
+        setMsgs((m) => {
+          const copy = [...m];
+          copy[copy.length - 1] = { who: "ai", text: reply };
+          return copy;
+        });
+      })
+      .catch((err: Error) => {
+        setMsgs((m) => {
+          const copy = [...m];
+          copy[copy.length - 1] = {
+            who: "ai",
+            text: err.message || "Maaf, AI Sensei lagi tidak bisa dihubungi. Coba lagi sebentar ya.",
+          };
+          return copy;
+        });
       });
-    }, 1100);
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -95,7 +116,6 @@ export default function SenseiChat() {
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" />
               Online · Siap membantu
             </p>
-            <span className="ml-2 rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-bold text-gold">DEMO</span>
           </div>
         </div>
 
@@ -209,7 +229,7 @@ export default function SenseiChat() {
 
         <div className="shrink-0 border-t border-line/40 bg-paper px-4 pb-3 pt-3 md:px-6">
           <p className="mb-2 text-center text-[10px] text-ink-soft/70">
-            Mode Demo — balasan contoh, belum terhubung ke AI.
+            AI Sensei bisa saja salah — selalu cek ulang dengan gurumu untuk hal penting.
           </p>
           <div className="mx-auto flex w-full max-w-2xl items-end gap-2">
             <div className="relative flex-1">

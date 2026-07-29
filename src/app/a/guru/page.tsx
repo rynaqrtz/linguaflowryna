@@ -26,6 +26,12 @@ const initialTeachers: Teacher[] = [
 export default function KelolaGuru() {
   const [teachers, setTeachers] = useState(initialTeachers);
   const [modal, setModal] = useState(false);
+  const [inviteName, setInviteName] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteClasses, setInviteClasses] = useState<string[]>([]);
+  const [inviting, setInviting] = useState(false);
+  const [inviteError, setInviteError] = useState("");
+  const [inviteSent, setInviteSent] = useState(false);
 
   const [query, setQuery] = useState("");
 
@@ -39,6 +45,46 @@ export default function KelolaGuru() {
     setTeachers((prev) =>
       prev.map((t) => (t.email === email ? { ...t, status: t.status === "Aktif" ? "Nonaktif" : "Aktif" } : t)),
     );
+  }
+
+  function toggleInviteClass(cls: string) {
+    setInviteClasses((prev) => (prev.includes(cls) ? prev.filter((c) => c !== cls) : [...prev, cls]));
+  }
+
+  async function sendInvite() {
+    setInviteError("");
+    if (!inviteName.trim() || !inviteEmail.trim()) {
+      setInviteError("Nama dan email wajib diisi.");
+      return;
+    }
+    setInviting(true);
+    try {
+      const res = await fetch("/api/invite-teacher", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: inviteEmail, fullName: inviteName, classIds: inviteClasses }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal mengundang guru.");
+      setTeachers((prev) => [
+        ...prev,
+        { name: inviteName, email: inviteEmail, classes: inviteClasses, students: 0, status: "Aktif" },
+      ]);
+      setInviteSent(true);
+    } catch (err) {
+      setInviteError(err instanceof Error ? err.message : "Terjadi kesalahan.");
+    } finally {
+      setInviting(false);
+    }
+  }
+
+  function closeModal() {
+    setModal(false);
+    setInviteName("");
+    setInviteEmail("");
+    setInviteClasses([]);
+    setInviteError("");
+    setInviteSent(false);
   }
 
   return (
@@ -194,38 +240,77 @@ export default function KelolaGuru() {
 
       {modal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-ink/40" onClick={() => setModal(false)} />
+          <div className="absolute inset-0 bg-ink/40" onClick={closeModal} />
           <Card className="relative z-10 w-full max-w-md" padded>
-            <h2 className="text-lg font-bold text-ink">Tambah Guru</h2>
-            <div className="mt-4 space-y-3">
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-ink">Nama</label>
-                <Input placeholder="Nama lengkap" />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-ink">Email</label>
-                <Input type="email" placeholder="guru@smkn.sch.id" />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-ink">Assign ke Kelas</label>
-                <div className="flex flex-wrap gap-2">
-                  {["XII RPL 1", "XII RPL 2", "XI TKJ 1", "XII MM 2"].map((c) => (
-                    <button key={c} className="rounded-full border border-sora px-3 py-1 text-xs font-semibold text-sora">
-                      {c}
-                    </button>
-                  ))}
+            {inviteSent ? (
+              <>
+                <h2 className="text-lg font-bold text-ink">Undangan Terkirim</h2>
+                <p className="mt-2 text-sm text-ink-soft">
+                  Email undangan sudah dikirim ke <span className="font-semibold text-ink">{inviteEmail}</span>{" "}
+                  untuk set password.
+                </p>
+                <Button fullWidth className="mt-4" onClick={closeModal}>
+                  Tutup
+                </Button>
+              </>
+            ) : (
+              <>
+                <h2 className="text-lg font-bold text-ink">Tambah Guru</h2>
+                <div className="mt-4 space-y-3">
+                  <div>
+                    <label className="mb-1 block text-sm font-semibold text-ink">Nama</label>
+                    <Input
+                      placeholder="Nama lengkap"
+                      value={inviteName}
+                      onChange={(e) => setInviteName(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-semibold text-ink">Email</label>
+                    <Input
+                      type="email"
+                      placeholder="guru@smkn.sch.id"
+                      value={inviteEmail}
+                      onChange={(e) => setInviteEmail(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-semibold text-ink">Assign ke Kelas</label>
+                    <div className="flex flex-wrap gap-2">
+                      {["XII RPL 1", "XII RPL 2", "XI TKJ 1", "XII MM 2"].map((c) => (
+                        <button
+                          key={c}
+                          type="button"
+                          onClick={() => toggleInviteClass(c)}
+                          className={
+                            "rounded-full border px-3 py-1 text-xs font-semibold " +
+                            (inviteClasses.includes(c)
+                              ? "border-sora bg-sora text-white"
+                              : "border-sora text-sora")
+                          }
+                        >
+                          {c}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <p className="mt-3 text-xs text-ink-soft">Guru akan menerima email untuk set password.</p>
-            <div className="mt-4 flex gap-2">
-              <Button variant="outline" fullWidth onClick={() => setModal(false)}>
-                Batal
-              </Button>
-              <Button fullWidth onClick={() => setModal(false)}>
-                Kirim Undangan
-              </Button>
-            </div>
+                {inviteError && (
+                  <p className="mt-3 rounded-btn bg-error/10 px-3 py-2 text-xs font-medium text-error">
+                    {inviteError}
+                  </p>
+                )}
+                <p className="mt-3 text-xs text-ink-soft">Guru akan menerima email untuk set password.</p>
+                <div className="mt-4 flex gap-2">
+                  <Button variant="outline" fullWidth onClick={closeModal}>
+                    Batal
+                  </Button>
+                  <Button fullWidth onClick={sendInvite} disabled={inviting}>
+                    {inviting ? "Mengirim…" : "Kirim Undangan"}
+                  </Button>
+                </div>
+              </>
+            )}
           </Card>
         </div>
       )}

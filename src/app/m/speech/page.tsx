@@ -1,58 +1,60 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, Volume2, StopCircle } from "lucide-react";
+import { Mic, Volume2, StopCircle, AlertTriangle } from "lucide-react";
 import { StudentShell } from "@/components/layout/StudentShell";
 import { Button } from "@/components/ui/Button";
 import { KanjiText } from "@/components/ui/KanjiText";
 import { Card } from "@/components/ui/Card";
 import { AnimatedPage } from "@/components/ui/AnimatedPage";
-import { isSpeechSupported, speakJapanese } from "@/lib/speech";
+import {
+  isSpeechSupported,
+  isRecognitionSupported,
+  speakJapanese,
+  recognizeJapaneseSpeech,
+  stopJapaneseRecognition,
+  scorePronunciation,
+} from "@/lib/speech";
+
+const TARGET_KANJI = "私は学生です";
+const TARGET_ROMAJI = "Watashi wa gakusei desu";
+
+type Phase = "idle" | "listening" | "processing" | "error";
 
 export default function SpeechPractice() {
   const router = useRouter();
-  const [recording, setRecording] = useState(false);
-  const [timer, setTimer] = useState(0);
-  const intervalRef = useRef<number | null>(null);
-  const autoRedirectRef = useRef<number | null>(null);
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+  const supported = isRecognitionSupported();
 
-  useEffect(() => {
-    if (recording) {
-      intervalRef.current = window.setInterval(() => {
-        setTimer((t) => t + 1);
-      }, 1000);
-    } else {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      intervalRef.current = null;
+  const startListening = useCallback(async () => {
+    setPhase("listening");
+    setErrorMsg("");
+    try {
+      const result = await recognizeJapaneseSpeech();
+      setPhase("processing");
+      const score = scorePronunciation(TARGET_KANJI, result.transcript, result.confidence);
+      sessionStorage.setItem("lf-speech-result", JSON.stringify(score));
+      router.push("/m/speech/hasil");
+    } catch (err) {
+      setPhase("error");
+      const message = err instanceof Error ? err.message : "unknown";
+      setErrorMsg(
+        message === "no-speech"
+          ? "Tidak ada suara terdengar. Coba lagi lebih dekat ke mikrofon."
+          : message === "not-allowed" || message === "permission-denied"
+            ? "Izin mikrofon ditolak. Aktifkan izin mikrofon di browser kamu."
+            : "Gagal mengenali suara. Coba lagi.",
+      );
     }
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      if (autoRedirectRef.current) clearTimeout(autoRedirectRef.current);
-    };
-  }, [recording]);
+  }, [router]);
 
-  const toggleRecording = useCallback(() => {
-    if (recording) {
-
-      if (autoRedirectRef.current) {
-        clearTimeout(autoRedirectRef.current);
-        autoRedirectRef.current = null;
-      }
-      setRecording(false);
-    } else {
-      setRecording(true);
-      setTimer(0);
-
-      autoRedirectRef.current = window.setTimeout(() => {
-        setRecording(false);
-        router.push("/m/speech/hasil");
-      }, 5000);
-    }
-  }, [recording, router]);
-
-  const timerStr = `${String(Math.floor(timer / 60)).padStart(2, "0")}:${String(timer % 60).padStart(2, "0")}`;
+  const stopListening = useCallback(() => {
+    stopJapaneseRecognition();
+    setPhase("idle");
+  }, []);
 
   return (
     <StudentShell noHeader>
@@ -78,47 +80,64 @@ export default function SpeechPractice() {
               className="mb-3 inline-flex items-center gap-1 text-xs font-semibold text-sora transition-colors hover:text-sora-tint disabled:opacity-40"
               aria-label="Dengar contoh"
               disabled={!isSpeechSupported()}
-              onClick={() => speakJapanese("私は学生です")}
+              onClick={() => speakJapanese(TARGET_KANJI)}
             >
               <Volume2 size={14} /> Dengar Contoh Native
             </motion.button>
             <KanjiText
-              kanji="私は学生です"
+              kanji={TARGET_KANJI}
               furigana="わたしはがくせいです"
-              romaji="Watashi wa gakusei desu"
+              romaji={TARGET_ROMAJI}
               size="lg"
             />
             <p className="mt-3 text-sm text-ink-soft">Saya adalah murid</p>
           </Card>
         </motion.div>
 
+        {!supported && (
+          <Card className="mt-6 border-error/30 bg-error/5" padded>
+            <div className="flex items-start gap-3">
+              <AlertTriangle size={18} className="mt-0.5 shrink-0 text-error" />
+              <p className="text-sm text-ink-soft">
+                Browser kamu belum mendukung speech recognition. Coba buka di Chrome versi desktop atau Android
+                terbaru.
+              </p>
+            </div>
+          </Card>
+        )}
+
+        {phase === "error" && (
+          <Card className="mt-6 border-error/30 bg-error/5" padded>
+            <p className="text-sm text-error">{errorMsg}</p>
+          </Card>
+        )}
+
         <div className="mt-8 flex h-20 items-center justify-center gap-[3px]">
           {Array.from({ length: 32 }).map((_, i) => {
-            const amplitude = recording
-              ? 20 + Math.abs(Math.sin(i * 0.7 + timer * 0.3)) * 55
-              : 8;
+            const amplitude = phase === "listening" ? 20 + Math.abs(Math.sin(i * 0.7)) * 55 : 8;
             return (
               <motion.span
                 key={i}
                 className="w-[3px] rounded-full"
                 style={{
-                  backgroundColor: recording
-                    ? i % 3 === 0
-                      ? "var(--color-sakura)"
-                      : i % 3 === 1
-                        ? "var(--color-sora)"
-                        : "var(--color-gold)"
-                    : "var(--color-sora-tint-soft)",
+                  backgroundColor:
+                    phase === "listening"
+                      ? i % 3 === 0
+                        ? "var(--color-sakura)"
+                        : i % 3 === 1
+                          ? "var(--color-sora)"
+                          : "var(--color-gold)"
+                      : "var(--color-sora-tint-soft)",
                 }}
                 animate={{
                   height: `${amplitude}%`,
-                  opacity: recording ? 1 : 0.3,
+                  opacity: phase === "listening" ? 1 : 0.3,
                 }}
                 transition={{
                   height: {
                     duration: 0.4,
                     ease: "easeInOut",
-                    repeat: recording ? Infinity : 0,
+                    repeat: phase === "listening" ? Infinity : 0,
                     repeatType: "reverse",
                   },
                   opacity: { duration: 0.2 },
@@ -129,47 +148,58 @@ export default function SpeechPractice() {
         </div>
 
         <AnimatePresence>
-          {recording && (
+          {phase === "listening" && (
             <motion.p
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               className="mt-2 text-center text-sm font-bold text-sakura"
             >
-              {timerStr}
+              Mendengarkan…
+            </motion.p>
+          )}
+          {phase === "processing" && (
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              className="mt-2 text-center text-sm font-bold text-sora"
+            >
+              Menganalisis ucapanmu…
             </motion.p>
           )}
         </AnimatePresence>
 
         <div className="mt-8 flex justify-center">
           <motion.button
-            onClick={toggleRecording}
-            className="relative flex h-24 w-24 items-center justify-center rounded-full text-white shadow-soft-lg"
+            onClick={phase === "listening" ? stopListening : startListening}
+            disabled={!supported || phase === "processing"}
+            className="relative flex h-24 w-24 items-center justify-center rounded-full text-white shadow-soft-lg disabled:opacity-40"
             style={{
-              backgroundColor: recording
-                ? "var(--color-error)"
-                : "var(--color-sakura)",
+              backgroundColor: phase === "listening" ? "var(--color-error)" : "var(--color-sakura)",
             }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.92 }}
-            animate={recording ? {
-              scale: [1, 1.06, 1],
-              boxShadow: [
-                "0 8px 30px rgba(200,55,58,0.3)",
-                "0 8px 50px rgba(200,55,58,0.5)",
-                "0 8px 30px rgba(200,55,58,0.3)",
-              ],
-            } : {
-              boxShadow: "0 8px 30px rgba(200,55,58,0.25)",
-            }}
+            whileHover={{ scale: supported ? 1.05 : 1 }}
+            whileTap={{ scale: supported ? 0.92 : 1 }}
+            animate={
+              phase === "listening"
+                ? {
+                    scale: [1, 1.06, 1],
+                    boxShadow: [
+                      "0 8px 30px rgba(194,77,119,0.3)",
+                      "0 8px 50px rgba(194,77,119,0.5)",
+                      "0 8px 30px rgba(194,77,119,0.3)",
+                    ],
+                  }
+                : { boxShadow: "0 8px 30px rgba(194,77,119,0.25)" }
+            }
             transition={
-              recording
+              phase === "listening"
                 ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
                 : { duration: 0.3 }
             }
-            aria-label={recording ? "Stop rekaman" : "Mulai rekaman"}
+            aria-label={phase === "listening" ? "Stop rekaman" : "Mulai rekaman"}
           >
-            {recording && (
+            {phase === "listening" && (
               <motion.span
                 className="absolute inset-0 rounded-full"
                 style={{ backgroundColor: "var(--color-error)" }}
@@ -178,14 +208,8 @@ export default function SpeechPractice() {
                 transition={{ duration: 1.2, repeat: Infinity, ease: "easeOut" }}
               />
             )}
-            {recording ? (
-              <motion.span
-                className="relative z-10"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              >
-                <StopCircle size={36} />
-              </motion.span>
+            {phase === "listening" ? (
+              <StopCircle size={36} className="relative z-10" />
             ) : (
               <Mic size={36} className="relative z-10" />
             )}
@@ -194,34 +218,11 @@ export default function SpeechPractice() {
 
         <motion.p
           className="mt-4 text-center text-xs text-ink-soft"
-          animate={recording ? { opacity: [0.5, 1, 0.5] } : { opacity: 1 }}
-          transition={
-            recording
-              ? { duration: 1.5, repeat: Infinity }
-              : { duration: 0.3 }
-          }
+          animate={phase === "listening" ? { opacity: [0.5, 1, 0.5] } : { opacity: 1 }}
+          transition={phase === "listening" ? { duration: 1.5, repeat: Infinity } : { duration: 0.3 }}
         >
-          {recording ? "Merekam — tap untuk stop" : "Tap mikrofon untuk mulai"}
+          {phase === "listening" ? "Merekam — tap untuk stop" : "Tap mikrofon untuk mulai, lalu ucapkan kalimatnya"}
         </motion.p>
-
-        <AnimatePresence>
-          {!recording && timer > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 16 }}
-            >
-              <Button
-                fullWidth
-                size="lg"
-                className="mt-6"
-                onClick={() => router.push("/m/speech/hasil")}
-              >
-                Lihat Hasil Evaluasi
-              </Button>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </AnimatedPage>
     </StudentShell>
   );

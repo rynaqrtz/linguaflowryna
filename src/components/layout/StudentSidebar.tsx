@@ -10,12 +10,12 @@ import {
   User,
   Mic,
   Trophy,
-  UserCircle,
   Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/brand/Logo";
-import { RoleSwitcher } from "@/components/layout/RoleSwitcher";
+import { Avatar } from "@/components/ui/Avatar";
+import { useUser } from "@/lib/user-context";
 
 interface SidebarItem {
   label: string;
@@ -36,6 +36,7 @@ const studentItems: SidebarItem[] = [
 
 export function StudentSidebar() {
   const path = usePathname();
+  const { user } = useUser();
 
   const sidebar = (
     <div className="flex h-full flex-col">
@@ -65,15 +66,12 @@ export function StudentSidebar() {
           );
         })}
       </nav>
-      <div className="hidden px-3 md:block">
-        <RoleSwitcher current="murid" />
-      </div>
       <div className="border-t border-line p-3">
         <div className="flex items-center gap-3 rounded-btn px-2 py-2">
-          <UserCircle size={36} className="text-sora" />
+          <Avatar name={user?.name ?? "Murid"} size={36} />
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-ink">Ahmad Fauzi</p>
-            <p className="truncate text-xs text-ink-soft">N5 · XII RPL 1</p>
+            <p className="truncate text-sm font-bold text-ink">{user?.name ?? "Murid"}</p>
+            <p className="truncate text-xs text-ink-soft">{user?.sub ?? "Kelas"}</p>
           </div>
         </div>
       </div>

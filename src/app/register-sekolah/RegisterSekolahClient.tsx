@@ -7,6 +7,7 @@ import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card } from "@/components/ui/Card";
+import { useUser } from "@/lib/user-context";
 
 function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
@@ -45,8 +46,11 @@ export default function RegisterSekolahClient() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [step2Touched, setStep2Touched] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const { signUp } = useUser();
 
   const schoolValid = school.trim().length >= 2;
   const npsnValid = isValidNpsn(npsn);
@@ -54,7 +58,8 @@ export default function RegisterSekolahClient() {
 
   const nameValid = name.trim().length >= 2;
   const emailValid = isValidEmail(email);
-  const step2Valid = nameValid && emailValid;
+  const passwordValid = password.length >= 8;
+  const step2Valid = nameValid && emailValid && passwordValid;
 
   function goToStep2() {
     setStep1Touched(true);
@@ -62,14 +67,36 @@ export default function RegisterSekolahClient() {
     setStep(2);
   }
 
-  function submitRegistration() {
+  async function submitRegistration() {
     setStep2Touched(true);
+    setSubmitError("");
     if (!step2Valid) return;
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
+
+    try {
+      const schoolRes = await fetch("/api/register-school", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ schoolName: school, npsn }),
+      });
+      const schoolData = await schoolRes.json();
+      if (!schoolRes.ok) throw new Error(schoolData.error || "Gagal mendaftarkan sekolah.");
+
+      const result = await signUp({
+        email,
+        password,
+        fullName: name,
+        role: "admin",
+        schoolId: schoolData.schoolId,
+      });
+      if (result.error) throw new Error(result.error);
+
       setStep(3);
-    }, 700);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Terjadi kesalahan.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -157,9 +184,27 @@ export default function RegisterSekolahClient() {
                   aria-invalid={step2Touched && !emailValid}
                 />
               </div>
+
+              <label htmlFor="admin-password" className="mb-1.5 mt-4 block text-sm font-semibold text-ink">
+                Password
+              </label>
+              <Input
+                id="admin-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Minimal 8 karakter"
+                aria-invalid={step2Touched && !passwordValid}
+              />
+
               {step2Touched && !step2Valid && (
                 <p className="mt-1.5 text-xs font-medium text-sakura">
-                  Isi nama (min. 2 huruf) dan email admin yang valid.
+                  Isi nama (min. 2 huruf), email admin yang valid, dan password minimal 8 karakter.
+                </p>
+              )}
+              {submitError && (
+                <p className="mt-1.5 rounded-btn bg-error/10 px-3 py-2 text-xs font-medium text-error">
+                  {submitError}
                 </p>
               )}
 
